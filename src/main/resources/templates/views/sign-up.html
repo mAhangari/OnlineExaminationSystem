@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Sign-up</title>
+    <link rel="stylesheet" href="/css/signup_form.css"/>
+    <script src="https://kit.fontawesome.com/0f0e261005.js" crossorigin="anonymous"></script>
+    <script src="/JavaScript/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+    <script src="/JavaScript/main.js"></script>
+    <script src="/javaScript/javaScriptFunctions.js"></script>
+</head>
+<body>
+    <div class="div1">
+        <h2 style="padding: 20px;">Sign-Up</h2>
+<!--        onsubmit="return checkRepeatPass()"-->
+        <form>
+    
+                <span class="container">
+    
+                    <input type="text" id="firstname"  placeholder="FirstName" name="firstName"  />
+                    <input id="lastnameID" type="text" placeholder="Last Name" name="lastName"  />
+                    <div>
+                        <input id="usernameID" type="text" name="username" placeholder="Username" maxlength="15" minlength="3" pattern="^[A-Za-z0-9_-]{3,15}$" >
+                        <i style="color: rgb(173, 173, 173);" class="fa fa-exclamation-circle position-absolute padding-up" aria-hidden="true">
+                            <span class="tooltip">must be between 3 and 15 characters</span>
+                        </i>
+                    </div>
+                    <div>
+                        <input id="passID" type="password" placeholder="Password" pattern="^.{8,}$" name="password" >
+                        <i style="color: rgb(173, 173, 173);" class="fa fa-exclamation-circle position-absolute padding-up" aria-hidden="true">
+                            <span class="tooltip">at least 8 characters</span>
+                        </i>
+                    </div>
+    
+                    <input id="pass-repeatID" type="password" placeholder="Repeat Password" name="passRepeat" >
+                    <input id="nationalCodeID" type="text" placeholder="National Code" name="nationalCode" >
+    
+                    <div>
+                        <select id="userType" name="user-type" onchange="changeOption()" style="color: gray;">
+                            <option value="PROFESSOR">Professor</option>
+                            <option value="STUDENT">Student</option>
+                        </select>
+                        <i style="color: rgb(173, 173, 173);" class="fa fa-exclamation-circle position-absolute padding-up" aria-hidden="true">
+                            <span class="tooltip">The role of the registrant</span>
+                        </i>
+                    </div>
+    
+                    <input id="userID" type="text" placeholder="Personnel Id" name="nationalCode" >
+    
+                    <label style="font-size: 12px; color: gray; padding: 10px;">
+                        <input type="checkbox" checked="checked" name="remember"> Keep me Signed in</label>
+                </span>
+        </form>
+        <span class="button-span">
+            <button id="submitRegistration">Sign Up</button>
+        </span>
+        <p id="messageID" th:if="model" th:text="${message}"></p>
+    </div>
+    </body>
+</html>
+

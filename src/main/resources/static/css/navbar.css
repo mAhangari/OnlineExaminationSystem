@@ -1,0 +1,71 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: gray;
+    overflow: hidden;
+}
+
+.div1 {
+    background: url(../images/navbar.jpg) no-repeat;
+    background-size: cover;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.div2 {
+    background: url(../images/online-examination-system.png) no-repeat;
+    background-size: 100%;
+    height: 100vh;
+}
+
+.span1 {
+    background-color: rgb(196, 196, 196);
+    align-self: flex-end;
+    height: 46px;
+    margin: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+span i {
+    padding: 5px;
+}
+
+.span1 a {
+    margin: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    color: whitesmoke;
+    padding: 5px;
+    background-color: rgb(168, 142, 142);
+    border: 0 solid;
+    border-radius: 20px;
+}
+
+.span1 a:hover {
+    opacity: 40%;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    text-decoration: none;
+    padding: 10px;
+    color: white;
+}
+
+li a:hover {
+    background-color:black
+}

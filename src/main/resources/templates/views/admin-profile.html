@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/css/admin-profile.css">
+    <script src="https://kit.fontawesome.com/0f0e261005.js" crossorigin="anonymous"></script>
+    <script src="/JavaScript/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+    <script src="/JavaScript/main.js"></script>
+</head>
+<body>
+  <div class="main-container">
+
+    <!-- LEFT-CONTAINER -->
+    <div class="left-container">
+      <div class="">
+        <!-- MENU BOX (LEFT-CONTAINER) -->
+        <ul class="">
+          <li id="profile">
+            <span>Profile</span>
+          </li>
+          <li>
+            <button id="dashboard" class="sidebar">Dashboard</button>
+          </li>
+          <li>
+            <button id="users" class="sidebar">Users</button>
+          </li>
+          <li>
+            <button class="sidebar">Users</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RIGHT-CONTAINER -->
+    <div class="right-container">
+      <!-- HEADER -->
+      <header class="right-container-header">
+        <ul class="">
+          <li>
+            <span class="profile-picture">
+              <span class="picture">
+                <i style="color: rgb(177, 177, 177);" class="fas fa-user fa-1x"></i>
+                <span class="tooltip">
+                  <a href="#">logout</a>
+                  <a href="#">logout</a>
+                  <a href="#">logout</a>
+                </span>
+              </span>
+              <span class="admin">Admin</span>
+            </span>
+          </li>
+        </ul>
+      </header>
+      
+
+      <div class="dashboard">
+        <!-- <p>dashboard</p> -->
+      </div>
+
+      <div class="users">
+        <div class="users-up-container">
+          <table>
+            <thead>
+              <th>id</th>
+              <th>title</th>
+              <th>description</th>
+              <th>date</th>
+              <th id="select-all">slelect
+                <span>
+                  <input id="select-all-input" type="checkbox" onclick="toggle(event)">
+                  <span class="checkmark-select-all"></span>
+                </span>
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>test title</td>
+                <td>test description</td>
+                <td>test date</td>
+                <td>
+                  <label class="container">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>test title</td>
+                <td>test description</td>
+                <td>test date</td>
+                <td>
+                  <input type="checkbox">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <span class="accept-reject">
+            <button id="accept">accept</button>
+            <button id="reject">reject</button>
+          </span>
+
+        </div>
+
+        <div class="users-down-container">
+          <button id="previous">PREVIOUS</button>
+          <p>1 2 3</p>
+          <button id="next">NEXT</button>
+        </div>
+      </div>
+    </div> <!-- end right-container -->
+  </div> <!-- end main-container -->
+  </body>
+  </html>
