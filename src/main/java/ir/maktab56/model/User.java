@@ -13,16 +13,16 @@ import java.util.Set;
 @Entity
 @Table(name = User.TABLE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Setter
-@Getter
+@Setter @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User extends BaseEntity<Long> {
 
     public static final String TABLE_NAME = "user_table";
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
-    private static final String USER_NAME = "user_name";
+    private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String USER_TYPE = "user_type";
     private static final String MOBILE_NUMBER = "mobile_number";
@@ -32,6 +32,14 @@ public class User extends BaseEntity<Long> {
     private static final String IS_ACTIVE = "is_active";
     private static final String NATIONAL_CODE = "national_code";
 
+    public User(String firstName, String lastName, String username, String password, String nationalCode) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.nationalCode = nationalCode;
+    }
+
     @Column(name = FIRST_NAME)
     @NotBlank(message = "First Name shouldn't be blank")
     private String firstName;
@@ -40,11 +48,10 @@ public class User extends BaseEntity<Long> {
     @NotBlank(message = "Last Name shouldn't be blank")
     private String lastName;
 
-    @Column(name = USER_NAME, unique = true, nullable = false)
+    @Column(name = USERNAME, unique = true, nullable = false)
     private String username;
 
     @Column(name = PASSWORD, nullable = false)
-    @Getter(AccessLevel.PRIVATE)
     private String password;
 
     @Column(name = USER_TYPE, nullable = false)
@@ -69,6 +76,13 @@ public class User extends BaseEntity<Long> {
 
     @Column(name = IS_ACTIVE)
     private boolean isActive = true;
+
+    @ManyToMany
+    private Set<Role> roles = new HashSet<>();
+
+    public void setRoles(Role role) {
+        this.roles.add(role);
+    }
 
     @Override
     public String toString() {
