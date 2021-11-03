@@ -16,7 +16,6 @@ import java.util.Set;
 @Setter @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User extends BaseEntity<Long> {
 
     public static final String TABLE_NAME = "user_table";
@@ -82,6 +81,10 @@ public class User extends BaseEntity<Long> {
 
     public void setRoles(Role role) {
         this.roles.add(role);
+    }
+
+    public void setRoles(Set<Role> role) {
+        this.roles = role;
     }
 
     @Override
