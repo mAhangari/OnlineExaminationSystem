@@ -40,6 +40,7 @@ public class UserController {
             professor.setUserType(UserType.PROFESSOR);
             professor.setPersonnelId(Long.parseLong(user.get("personnelId")));
             professor.setRoles(roleService.findRoleByName("PROFESSOR").orElse(null));
+            professor.setActive(false);
             professorService.save(professor);
         } else {
             Student student = new Student();
@@ -51,9 +52,10 @@ public class UserController {
             student.setUserType(UserType.STUDENT);
             student.setStudentId(Long.parseLong(user.get("studentId")));
             student.setRoles(roleService.findRoleByName("STUDENT").orElse(null));
+            student.setActive(false);
             studentService.save(student);
         }
 
-        return "<p style='color:'green''>Registration was successful!!!</p>";
+        return "Registration was successful!!! wait for confirmation.";
     }
 }
