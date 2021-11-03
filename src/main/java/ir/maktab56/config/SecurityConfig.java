@@ -21,8 +21,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .mvcMatchers("/admin/*")
                 .hasRole("ADMIN")
-                .anyRequest().permitAll();
+                .anyRequest().permitAll()
+                .and().formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll();
         http.httpBasic();
-        http.formLogin().loginPage("/login").successForwardUrl("/user-page");
+        http.formLogin()
+                .loginPage("/login")
+                .successForwardUrl("/user-page")
+                .and().logout();
     }
 }
