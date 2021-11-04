@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +21,5 @@ public class CourseDTO {
     private LocalDate endDate;
 
     private ProfessorDTO professor;
-
-    private Set<StudentDTO> students;
 
 }
