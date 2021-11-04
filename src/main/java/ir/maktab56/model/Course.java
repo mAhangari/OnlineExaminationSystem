@@ -36,6 +36,6 @@ public class Course extends BaseEntity<Long> {
     private Professor professor;
 
     @ManyToMany
-    private Set<Student> student;
+    private Set<Student> students;
 
 }

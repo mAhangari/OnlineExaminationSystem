@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -14,4 +16,7 @@ import javax.persistence.Entity;
 public class Student extends User {
 
     private Long StudentId;
+
+    @ManyToMany
+    private Set<Course> course;
 }
