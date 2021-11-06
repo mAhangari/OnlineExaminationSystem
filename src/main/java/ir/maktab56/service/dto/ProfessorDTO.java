@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfessorDTO {
+public class ProfessorDTO extends UserDTO {
 
     private String firstName;
 
