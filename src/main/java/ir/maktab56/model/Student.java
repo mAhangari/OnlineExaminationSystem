@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,6 +19,6 @@ public class Student extends User {
     private Long StudentId;
 
     @ManyToMany(mappedBy = "students")
-    private Set<Course> course;
+    private Set<Course> course = new HashSet<>();
     
 }
