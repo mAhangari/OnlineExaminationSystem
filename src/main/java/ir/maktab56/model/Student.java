@@ -17,6 +17,7 @@ public class Student extends User {
 
     private Long StudentId;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "students")
     private Set<Course> course;
+    
 }
