@@ -10,6 +10,7 @@ import ir.maktab56.service.RoleService;
 import ir.maktab56.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class StudentServiceImpl extends UserServiceImpl<Student> implements Stud
         this.professorService = professorService;
     }
 
+    // update student base on first name, last name, national code, student id and username
     @Override
     public void updateStudent(
             @Param(value = "firstName") String firstName, @Param(value = "lastName") String lastName,
@@ -51,6 +53,7 @@ public class StudentServiceImpl extends UserServiceImpl<Student> implements Stud
         return repository.findStudentByUsername(username);
     }
 
+    // method for change student fields base on information submitted
     @Override
     public void changeStudentFields(List<Map<String, String>> user, Student exStudent) {
 
@@ -66,6 +69,7 @@ public class StudentServiceImpl extends UserServiceImpl<Student> implements Stud
             professorService.changeStudentToProfessor(user, exStudent);
     }
 
+    // method for change existing professor to a student and remove existing professor
     @Override
     public void changeProfessorToStudent(List<Map<String, String>> user, Professor exProfessor) {
         String firstName = user.get(0).get("firstName");
@@ -90,5 +94,21 @@ public class StudentServiceImpl extends UserServiceImpl<Student> implements Stud
             professorService.delete(exProfessor);
             save(newStudent);
         }
+    }
+
+    // method for create new user base in sign up information
+    @Override
+    public void addNewStudent(Map<String, String> user) {
+        Student student = new Student();
+        student.setFirstName(user.get("firstName"));
+        student.setLastName(user.get("lastName"));
+        student.setUsername(user.get("username"));
+        student.setPassword(new BCryptPasswordEncoder().encode(user.get("password")));
+        student.setNationalCode(user.get("nationalCode"));
+        student.setUserType(UserType.STUDENT);
+        student.setStudentId(Long.parseLong(user.get("studentId")));
+        student.setRoles(roleService.findRoleByName("STUDENT").orElse(null));
+        student.setActive(false);
+        save(student);
     }
 }

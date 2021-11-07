@@ -21,4 +21,6 @@ public interface StudentService extends UserService<Student> {
     void changeStudentFields(List<Map<String, String>> user, Student student);
 
     void changeProfessorToStudent(List<Map<String, String>> user, Professor exProfessor);
+
+    void addNewStudent(Map<String, String> user);
 }
