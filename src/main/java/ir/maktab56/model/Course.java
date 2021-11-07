@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -38,6 +39,6 @@ public class Course extends BaseEntity<Long> {
     private Professor professor;
 
     @ManyToMany
-    private Set<Student> students;
+    private Set<Student> students = new HashSet<>();
 
 }
