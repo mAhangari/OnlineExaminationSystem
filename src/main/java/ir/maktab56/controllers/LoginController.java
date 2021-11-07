@@ -16,11 +16,13 @@ public class LoginController {
 
     private final UserService<User> userService;
 
+    // mapping for login url
     @RequestMapping(value = "/login")
     public String loginForm() {
         return "views/login";
     }
 
+    // forward user to their personal pages
     @RequestMapping(value = "/user-page")
     public String userPage(HttpServletRequest request) {
         Optional<User> user = userService.findUserByUsername(request.getParameter("username"));
@@ -34,6 +36,7 @@ public class LoginController {
         } else return "redirect:/";
     }
 
+    // mapping for sign-out request
     @RequestMapping(value = "/sign-out")
     public String logout() {
         return "redirect:/";

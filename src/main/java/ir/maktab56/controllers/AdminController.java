@@ -31,7 +31,6 @@ public class AdminController {
     private final UserService<User> userService;
     private final StudentService studentService;
     private final ProfessorService professorService;
-    private final RoleService roleService;
     private final CourseService courseService;
     private final UserMapper userMapper;
     private final ProfessorMapper professorMapper;
@@ -123,7 +122,7 @@ public class AdminController {
     public ResponseEntity<JSONObject> userChange(@RequestBody List<Map<String, String>> user) {
 
         User aUser = userService.findUserByUsername(user.get(5).get("username")).orElseThrow();
-        if(aUser.getUserType().equals(UserType.STUDENT))
+        if (aUser.getUserType().equals(UserType.STUDENT))
             studentService.changeStudentFields(user, (Student) aUser);
         else
             professorService.changeProfessorFields(user, (Professor) aUser);
@@ -215,25 +214,8 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateCourse(@RequestBody List<Map<String, Object>> course) {
 
-        String title = (String) course.get(0).get("title");
-        String courseId = (String) course.get(1).get("courseId");
-        LocalDate startDate = LocalDate.parse((String) course.get(2).get("startDate"));
-        LocalDate endDate = LocalDate.parse((String) course.get(3).get("endDate"));
-        String professorUser = (String) course.get(4).get("professor");
-        List<Map<String, String>> studentsUsername = (List<Map<String, String>>) course.get(5).get("students");
+        courseService.updateCourse(course);
 
-        Course existsCourse = courseService.findCoursesByCourseId(courseId);
-        existsCourse.setTitle(title);
-        existsCourse.setStartDate(startDate);
-        existsCourse.setEndDate(endDate);
-        if (professorUser != null)
-            existsCourse.setProfessor(professorService.findUserByUsername(professorUser).orElse(null));
-
-        Set<Student> students = new HashSet<>();
-        studentsUsername.forEach(a -> students.add(studentService.findUserByUsername(a.get("username")).orElseThrow()));
-
-        existsCourse.setStudents(students);
-        courseService.save(existsCourse);
         JSONObject obj = new JSONObject();
         obj.put("status", "success");
         return ResponseEntity.ok(obj.toMap());
