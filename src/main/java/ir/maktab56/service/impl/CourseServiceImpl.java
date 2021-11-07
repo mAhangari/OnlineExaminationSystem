@@ -4,18 +4,37 @@ import ir.maktab56.model.Course;
 import ir.maktab56.model.Student;
 import ir.maktab56.repository.CourseRepository;
 import ir.maktab56.service.CourseService;
-import lombok.RequiredArgsConstructor;
+import ir.maktab56.service.ProfessorService;
+import ir.maktab56.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository repository;
+    private ProfessorService professorService;
+    private StudentService studentService;
 
+    public CourseServiceImpl(CourseRepository courseRepository){
+        this.repository = courseRepository;
+    }
+
+    @Autowired
+    public void setProfessorService(ProfessorService professorService) {
+        this.professorService = professorService;
+    }
+
+    @Autowired
+    public void setStudentService(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @Override
     public List<Course> findAll() {
@@ -56,5 +75,28 @@ public class CourseServiceImpl implements CourseService {
         }
         repository.saveAll(student.getCourse());
         return true;
+    }
+
+    @Override
+    public void updateCourse(List<Map<String, Object>> course) {
+        String title = (String) course.get(0).get("title");
+        String courseId = (String) course.get(1).get("courseId");
+        LocalDate startDate = LocalDate.parse((String) course.get(2).get("startDate"));
+        LocalDate endDate = LocalDate.parse((String) course.get(3).get("endDate"));
+        String professorUser = (String) course.get(4).get("professor");
+        List<Map<String, String>> studentsUsername = (List<Map<String, String>>) course.get(5).get("students");
+
+        Course existsCourse = findCoursesByCourseId(courseId);
+        existsCourse.setTitle(title);
+        existsCourse.setStartDate(startDate);
+        existsCourse.setEndDate(endDate);
+        if (professorUser != null)
+            existsCourse.setProfessor(professorService.findUserByUsername(professorUser).orElse(null));
+
+        Set<Student> students = new HashSet<>();
+        studentsUsername.forEach(a -> students.add(studentService.findUserByUsername(a.get("username")).orElseThrow()));
+
+        existsCourse.setStudents(students);
+        save(existsCourse);
     }
 }

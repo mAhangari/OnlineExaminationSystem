@@ -4,6 +4,7 @@ import ir.maktab56.model.Course;
 import ir.maktab56.model.Student;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface CourseService {
@@ -19,4 +20,6 @@ public interface CourseService {
     boolean removeProfessorIdFromCourse(Set<Course> courses);
 
     boolean removeStudentIdFromCourse(Student student);
+
+    void updateCourse(List<Map<String, Object>> course);
 }
