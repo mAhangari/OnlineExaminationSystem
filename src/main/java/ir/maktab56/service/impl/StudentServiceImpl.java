@@ -22,20 +22,23 @@ public class StudentServiceImpl extends UserServiceImpl<Student> implements Stud
 
     private final StudentRepository repository;
     private final RoleService roleService;
-    private final CourseService courseService;
+    private CourseService courseService;
     private ProfessorService professorService;
 
-    public StudentServiceImpl(StudentRepository repository, RoleService roleService,
-                              CourseService courseService) {
+    public StudentServiceImpl(StudentRepository repository, RoleService roleService) {
         super(repository);
         this.repository = repository;
         this.roleService = roleService;
-        this.courseService = courseService;
     }
 
     @Autowired
     public void setProfessorService(ProfessorService professorService) {
         this.professorService = professorService;
+    }
+
+    @Autowired
+    public void setCourseService(CourseService courseService) {
+        this.courseService = courseService;
     }
 
     // update student base on first name, last name, national code, student id and username

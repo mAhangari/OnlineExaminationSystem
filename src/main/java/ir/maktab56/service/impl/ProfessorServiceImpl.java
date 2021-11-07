@@ -8,6 +8,7 @@ import ir.maktab56.service.CourseService;
 import ir.maktab56.service.ProfessorService;
 import ir.maktab56.service.RoleService;
 import ir.maktab56.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,16 +21,27 @@ import java.util.Optional;
 public class ProfessorServiceImpl extends UserServiceImpl<Professor> implements ProfessorService {
 
     private final ProfessorRepository repository;
-    private final RoleService roleService;
-    private final CourseService courseService;
-    private final StudentService studentService;
+    private RoleService roleService;
+    private CourseService courseService;
+    private StudentService studentService;
 
-    public ProfessorServiceImpl(ProfessorRepository repository, RoleService roleService,
-                                CourseService courseService, StudentService studentService) {
+    public ProfessorServiceImpl(ProfessorRepository repository) {
         super(repository);
         this.repository = repository;
-        this.roleService = roleService;
+    }
+
+    @Autowired
+    public void setCourseService(CourseService courseService) {
         this.courseService = courseService;
+    }
+
+    @Autowired
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
+    @Autowired
+    public void setStudentService(StudentService studentService) {
         this.studentService = studentService;
     }
 
@@ -47,6 +59,7 @@ public class ProfessorServiceImpl extends UserServiceImpl<Professor> implements 
         return repository.findProfessorByUsername(username);
     }
 
+    // method for change professor fields based on information submitted
     @Override
     public void changeProfessorFields(List<Map<String, String>> user, Professor exProfessor) {
 
@@ -62,6 +75,7 @@ public class ProfessorServiceImpl extends UserServiceImpl<Professor> implements 
             studentService.changeProfessorToStudent(user, exProfessor);
     }
 
+    // method for change student to professor base on existing professor
     @Override
     public void changeStudentToProfessor(List<Map<String, String>> user, Student exStudent) {
         String firstName = user.get(0).get("firstName");
@@ -86,6 +100,7 @@ public class ProfessorServiceImpl extends UserServiceImpl<Professor> implements 
         }
     }
 
+    // method to add new professor
     @Override
     public void addNewProfessor(Map<String, String> user) {
 
