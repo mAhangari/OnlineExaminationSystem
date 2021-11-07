@@ -3,6 +3,8 @@ package ir.maktab56.model;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -11,4 +13,7 @@ import javax.persistence.Entity;
 public class Professor extends User {
 
     private Long personnelId;
+
+    @OneToMany(mappedBy = "professor")
+    private Set<Course> courses;
 }
