@@ -15,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class MultipleChoice extends BaseEntity<Long> {
+public class MultipleChoice extends Question {
 
     public static final String TABLE_NAME = "multiple_choice_table";
     private static final String OPTION_TABLE = "option_table";
