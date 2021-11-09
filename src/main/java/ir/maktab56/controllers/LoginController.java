@@ -30,9 +30,9 @@ public class LoginController {
             if (user.get().getUserType().equals(UserType.ADMIN))
                 return "redirect:admin/admin-profile";
             else if (user.get().getUserType().equals(UserType.PROFESSOR))
-                return "views/professor-profile";
+                return "redirect:professor/professor-profile";
             else
-                return "views/student-profile";
+                return "redirect:student/student-profile";
         } else return "redirect:/";
     }
 
