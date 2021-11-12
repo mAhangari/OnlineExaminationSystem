@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalTime;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,5 +17,5 @@ public class QuizDTO {
 
     private String description;
 
-    private LocalTime quizTime;
+    private Long quizTime;
 }
