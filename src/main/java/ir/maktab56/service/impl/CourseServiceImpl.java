@@ -99,4 +99,9 @@ public class CourseServiceImpl implements CourseService {
         existsCourse.setStudents(students);
         save(existsCourse);
     }
+
+    @Override
+    public List<Course> findCoursesByProfessor_Username(String professorUsername) {
+        return repository.findCoursesByProfessor_Username(professorUsername);
+    }
 }

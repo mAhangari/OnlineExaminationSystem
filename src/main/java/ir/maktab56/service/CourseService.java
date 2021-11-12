@@ -22,4 +22,6 @@ public interface CourseService {
     boolean removeStudentIdFromCourse(Student student);
 
     void updateCourse(List<Map<String, Object>> course);
+
+    List<Course> findCoursesByProfessor_Username(String professorUsername);
 }
