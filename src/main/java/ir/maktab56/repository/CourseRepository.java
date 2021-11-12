@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @Transactional(readOnly = true)
 public interface CourseRepository extends JpaRepository<Course, Long> {
@@ -16,5 +18,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Transactional(readOnly = false)
     void deleteCourseByCourseId(@Param(value = "courseId") String courseId);
+
+    List<Course> findCoursesByProfessor_Username(String professorUsername);
 
 }
