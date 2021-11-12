@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>Profile</title>
+  <link rel="stylesheet" href="/css/professor-profile.css">
+  <script src="https://kit.fontawesome.com/0f0e261005.js" crossorigin="anonymous"></script>
+  <script src="/JavaScript/jquery-3.6.0.min.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+  <script src="/JavaScript/professor-profile.js"></script>
+</head>
+<body>
+<div class="main-container">
+
+  <!-- LEFT-CONTAINER -->
+  <div class="left-container">
+    <div class="">
+      <!-- MENU BOX (LEFT-CONTAINER) -->
+      <ul class="">
+        <li id="profile">
+          <span>Profile</span>
+        </li>
+        <li>
+          <button id="dashboard" class="sidebar">Dashboard</button>
+        </li>
+        <li>
+          <button id="all_course" class="sidebar">Courses</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- RIGHT-CONTAINER -->
+  <div class="right-container">
+    <!-- HEADER -->
+    <header class="right-container-header">
+      <ul class="">
+        <li>
+            <span class="profile-picture">
+              <span class="picture">
+                <i style="color: rgb(177, 177, 177);" class="fas fa-user fa-1x"></i>
+                <span class="tooltip">
+                  <a href="#">option</a>
+                  <a href="#">option</a>
+                  <a href="#">Settings</a>
+                  <form method="POST" action="/logout">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit" name="submit_param" value="submit_value">logout</button>
+                  </form>
+                </span>
+              </span>
+              <span class="admin">Professor</span>
+            </span>
+        </li>
+      </ul>
+    </header>
+
+    <div id="messages">
+      <p id="message_text"></p>
+    </div>
+
+    <div class="dashboard">
+      <!-- <p>dashboard</p> -->
+    </div>
+
+    <!-- start of right container users button -->
+    <div class="courses">
+      <div class="course-up-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Num</th>
+              <th>Title</th>
+              <th>Course Id</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Info</th>
+            </tr>
+          </thead>
+          <tbody id="records_table_body_professor_course">
+          </tbody>
+        </table>
+      </div>
+
+      <div class="course-down-container">
+        <button id="previous" class="previousAndNextButton" type="button">PREVIOUS</button>
+        <span class="circle"></span>
+        <span class="circle"></span>
+        <span class="circle"></span>
+        <button id="next" class="previousAndNextButton" type="button">NEXT</button>
+      </div>
+    </div>
+    <!-- end of right container users button -->
+
+    <!-- quiz information after click on info button in course table -->
+    <div id="course_table_quizInformation" class="user_information_table course-up-container display_none">
+        <span id="course_table_quiz_information" class="">
+            <table>
+              <thead>
+                <th>Num</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Time</th>
+                <th>Edit</th>
+                <th>Delete</th>
+              </thead>
+              <tbody id="course_table_quiz_info"></tbody>
+            </table>
+        </span>
+        <span class="margin-top-50px">
+            <button class="red_button course_edit_button_cancel" type="button" onclick="$(this).quiz_back_function()">Back</button>
+            <button class="green_button course_edit_button_cancel" type="button" onclick="$(this).quiz_create_function()">Create</button>
+        </span>
+    </div>
+    <!-- end of quiz information table -->
+
+    <!-- start of create page for quiz -->
+    <div id="create_quiz" class="user_information_table centralized_element height_100vh display_none">
+        <span id="create_quiz_id">
+          <form action="" method="post" id="submit_new_quiz" class="course-up-container centralized_element">
+            <input id="quiz_title_id" type="text" placeholder="Enter Title" required>
+            <input id="quiz_description_id" type="text" placeholder="Enter Description" required>
+            <input id="quiz_time_id" type="number" min="0" max="360" placeholder="Enter Quiz Time(Min)" required>
+
+            <span class="margin-top-50px">
+              <button type="submit">Submit</button>
+              <button class="red_button course_edit_button_cancel" type="button" onclick="$(this).quiz_back_function()">Back</button>
+            </span>
+          </form>
+        </span>
+    </div>
+    <!-- end of create page for quiz -->
+
+    <!-- edit quiz table information -->
+    <div id="edit_quiz_table" class="user_information_table course-up-container">
+      <form id="submit_quiz_change_info_data" class="centralized_element">
+        <Table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Quiz Time</th>
+            </tr>
+          </thead>
+
+          <tbody id="edit_course_table_body">
+            <tr>
+              <td><input id="quiz_edit_title" type="text" required/></td>
+              <td><input id="quiz_edit_description" type="text" required/></td>
+              <td><input id="quiz_edit_time" type="number" min="0" max="360" required/></td>
+            </tr>
+          </tbody>
+        </Table>
+
+        <span class="margin-top-50px">
+          <button class="green_button" id="course_edit_button_save" type="submit">Save</button>
+          <button class="red_button course_edit_button_cancel" id="course_edit_button_cancel" type="button" onclick="$(this).quiz_back_function()">Cancel</button>
+        </span>
+      </form>
+    </div>
+    <!-- end of edit quiz table information -->
+
+    <!-- show user information -->
+    <div id="user_information_table_edit" class="user_information_table users-up-container">
+      <Table>
+        <thead>
+        <tr><th colspan="2">User Information</th></tr>
+        </thead>
+        <tbody id="user_information_table_body">
+        <tr><td class="left_td_size">First Name</td><td id="user_info_first_name" class="right_td_size"></td></tr>
+
+        <tr><td class="left_td_size">Last Name</td><td id="user_info_last_name" class="right_td_size"></td></tr>
+
+        <tr><td class="left_td_size">Username</td><td id="user_info_username" class="right_td_size"></td></tr>
+
+        <tr><td class="left_td_size">User Type</td><td id="user_info_user_type" class="right_td_size"></td></tr>
+
+        <tr><td class="left_td_size">National Code</td><td id="user_info_national_code" class="right_td_size"></td></tr>
+
+        <tr><td class="left_td_size">User Id</td><td id="user_info_user_id" class="right_td_size"></td></tr>
+
+        <tr id="user_information_button">
+          <td colspan="2">
+            <button id="user_info_button_save" type="button" onclick="$(this).user_info_save_function()">Save</button>
+            <button class="green_button" id="user_info_button_change" type="button" onclick="$(this).user_info_change_function()">change</button>
+            <button class="red_button" id="user_info_button_cancel" type="button" onclick="$(this).user_info_cancel_function()">Cancel</button>
+          </td>
+        </tr>
+        </tbody>
+      </Table>
+    </div>
+
+    <!-- start of right container courser button -->
+    <div class="course">
+      <p id="messageID_2" style="color: #0f958a"></p>
+      <div id="course_table" class="users-up-container">
+        <table>
+          <thead>
+          <tr>
+            <th>Num</th>
+            <th>Title</th>
+            <th>Course Id</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Professor</th>
+            <th>Info</th>
+            <th>Edit</th>
+          </tr>
+          </thead>
+          <tbody id="records_table_body_all_course">
+          </tbody>
+        </table>
+      </div>
+
+      <div id="add_new_course">
+        <button class="green_button" id="add_course_button" type="button" onclick="$(this).add_course_function()">Add Course</button>
+      </div>
+    </div>
+    <!-- end of right container courser button -->
+
+    <!-- add new course -->
+    <div id="add_new_course_table" class="user_information_table users-up-container">
+      <p id="messageID"></p>
+      <form id="submit_course_info_data">
+        <Table>
+          <thead>
+          <tr><th colspan="2">Add New Course</th></tr>
+          </thead>
+          <tbody id="add_course_table_body">
+          <tr>
+            <td class="left_td_size"><label for="course_info_title">Title</label></td>
+            <td class="right_td_size"><input id="course_info_title" type="text" required/></td>
+          </tr>
+
+          <tr>
+            <td class="left_td_size"><label for="course_info_courseId">Course Id</label></td>
+            <td class="right_td_size"><input id="course_info_courseId" type="text" required/></td>
+          </tr>
+
+          <tr>
+            <td class="left_td_size"><label for="course_info_start_date">Start Date</label></td>
+            <td class="right_td_size"><input id="course_info_start_date" type="date" required/></td>
+          </tr>
+
+          <tr>
+            <td class="left_td_size"><label for="course_info_end_date">End Date</label></td>
+            <td class="right_td_size"><input id="course_info_end_date" type="date" required/></td>
+          </tr>
+
+          <tr id="add_course_table_button_button">
+            <td colspan="2">
+              <button class="green_button" id="course_info_button_save" type="submit">Save</button>
+              <button class="red_button" id="course_info_button_cancel" type="button" onclick="$(this).course_info_cancel_function()">Cancel</button>
+            </td>
+          </tr>
+          </tbody>
+        </Table>
+      </form>
+    </div>
+
+    <!-- user information after click button info in course table -->
+    <div id="course_table_userInformation" class="user_information_table users-up-container">
+        <span id="course_table_user_information">
+            <table>
+              <thead>
+                <th>Num</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>National Code</th>
+              </thead>
+              <tbody id="111"></tbody>
+            </table>
+          </span>
+      <span class="margin-top-50px">
+            <button class="red_button course_edit_button_cancel" id="123" type="button" onclick="$(this).course_info_cancel_function()">Back</button>
+          </span>
+    </div>
+
+  </div> <!-- end right-container -->
+</div> <!-- end main-container -->
+</body>
+</html>
