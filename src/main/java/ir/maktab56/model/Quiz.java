@@ -5,11 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import java.time.LocalTime;
+import javax.persistence.*;
 
 @Entity
 @Table(name = Quiz.TABLE_NAME)
@@ -19,10 +15,17 @@ import java.time.LocalTime;
 public class Quiz extends BaseEntity<Long> {
 
     public static final String TABLE_NAME = "quiz_table";
+    private static final String COURSE_ID = "course_id";
+
     private String title;
     private String description;
-    private LocalTime quizTime;
+    private Long quizTime;
 
     @OneToOne(cascade = CascadeType.ALL)
     private QuestionSheet questionSheet;
+
+    @ManyToOne
+    @JoinColumn(name = COURSE_ID)
+    private Course course;
+
 }

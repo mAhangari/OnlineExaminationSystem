@@ -44,4 +44,7 @@ public class Course extends BaseEntity<Long> {
     @OneToOne(mappedBy = "course", cascade = CascadeType.ALL)
     private QuestionBank questionBank;
 
+    @OneToMany(mappedBy = "course")
+    private Set<Quiz> quizzes = new HashSet<>();
+
 }
