@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -14,8 +13,8 @@ import java.util.Set;
 @Setter
 public class QuestionSheetDTO {
 
-    private Set<QuestionDTO> questions = new HashSet<>();
+    private Long id;
 
-    private QuizDTO quiz;
+    private Set<QuestionDTO> questions;
 
 }

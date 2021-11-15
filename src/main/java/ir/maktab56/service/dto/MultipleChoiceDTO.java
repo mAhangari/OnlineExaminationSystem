@@ -11,15 +11,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public abstract class MultipleChoiceDTO {
-
-    private Long id;
-
-    private String title;
-
-    private String question;
-
-    private double score;
+public class MultipleChoiceDTO extends QuestionDTO {
 
     private String correctAnswer;
 
