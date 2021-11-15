@@ -10,20 +10,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = MultipleChoice.TABLE_NAME)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class MultipleChoice extends Question {
 
-    public static final String TABLE_NAME = "multiple_choice_table";
     private static final String OPTION_TABLE = "option_table";
     private static final String MULTIPLE_CHOICE_ID = "multiple_choice_id";
+    private static final String CORRECT_ANSWER = "correct_answer";
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @JoinTable(name = OPTION_TABLE, joinColumns = @JoinColumn(name = MULTIPLE_CHOICE_ID))
     private Set<String> options = new HashSet<>();
+
+    @Column(name = CORRECT_ANSWER)
     private String correctAnswer;
 
     public void addOption(String option) {
