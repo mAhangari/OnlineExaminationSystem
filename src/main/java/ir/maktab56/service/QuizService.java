@@ -19,4 +19,6 @@ public interface QuizService {
     void updateQuiz(List<Map<String, Object>> quiz);
 
     void createQuiz(List<Map<String, Object>> quiz);
+
+    List<Quiz> findAll();
 }

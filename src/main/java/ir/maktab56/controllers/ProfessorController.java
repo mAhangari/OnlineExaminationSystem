@@ -1,10 +1,11 @@
 package ir.maktab56.controllers;
 
-import ir.maktab56.mapper.CourseMapper;
-import ir.maktab56.mapper.QuizMapper;
-import ir.maktab56.service.CourseService;
-import ir.maktab56.service.QuizService;
+import ir.maktab56.mapper.*;
+import ir.maktab56.service.EssaysService;
+import ir.maktab56.service.*;
 import ir.maktab56.service.dto.CourseDTO;
+import ir.maktab56.service.dto.QuestionDTO;
+import ir.maktab56.service.dto.QuestionSheetDTO;
 import ir.maktab56.service.dto.QuizDTO;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
@@ -26,6 +27,11 @@ public class ProfessorController {
     private final CourseMapper courseMapper;
     private final QuizMapper quizMapper;
     private final QuizService quizService;
+    private final QuestionSheetService questionSheetService;
+    private final EssaysService essaysService;
+    private final MultipleChoiceService multipleChoiceService;
+    private final QuestionService questionService;
+
 
     // create mapping for professor profile page
     @GetMapping(value = "/professor-profile")
@@ -85,9 +91,104 @@ public class ProfessorController {
 
     // create new quiz
     @PostMapping(value = "/create-quiz")
-    public String createQuiz(@RequestBody List<Map<String, Object>> quiz) {
+    public ResponseEntity<Map<String, Object>> createQuiz(@RequestBody List<Map<String, Object>> quiz) {
         quizService.createQuiz(quiz);
-        return "successful!!!";
+
+        JSONObject obj = new JSONObject();
+        obj.put("status", "success");
+        return ResponseEntity.ok(obj.toMap());
+    }
+
+    // return question sheet
+    @GetMapping(value = "/question-sheet{id}")
+    public ResponseEntity<QuestionSheetDTO> questionSheet(@PathVariable String id) {
+
+        return ResponseEntity.ok(
+                questionSheetService.convertQuestionSheetToQuestionSheetDTO(Long.parseLong(id))
+        );
+    }
+
+    // save essays question
+    @PostMapping(value = "/add-essays")
+    public ResponseEntity<Map<String, Object>> addEssays(@RequestBody List<Map<String, Object>> request) {
+
+        essaysService.creatOrUpdateEssays(request);
+
+        JSONObject obj = new JSONObject();
+        obj.put("status", "success");
+        return ResponseEntity.ok(obj.toMap());
+    }
+
+    // save multiple option question
+    @PostMapping(value = "/add-multipleOption")
+    public ResponseEntity<Map<String, Object>> addMultipleOption(@RequestBody List<Map<String, Object>> request) {
+
+        multipleChoiceService.creatOrUpdateMultipleChoice(request);
+
+        JSONObject obj = new JSONObject();
+        obj.put("status", "success");
+        return ResponseEntity.ok(obj.toMap());
+    }
+
+    // get all question belong to current professor
+    @GetMapping(value = "/get-questions")
+    public ResponseEntity<List<QuestionDTO>> getQuestions() {
+
+        return ResponseEntity.ok(
+                questionService.convertQuestionsToQuestionDTOs()
+        );
+    }
+
+    // add question into question sheet
+    @PostMapping(value = "/add-question")
+    public ResponseEntity<Map<String, Object>> addQuestion(@RequestBody List<Map<String, Object>> question) {
+
+        questionSheetService.addQuestion(question);
+
+        JSONObject obj = new JSONObject();
+        obj.put("status", "success");
+        return ResponseEntity.ok(obj.toMap());
+    }
+
+    // return all quizzes based on current user
+    @GetMapping(value = "/all-quizzes")
+    public ResponseEntity<List<QuizDTO>> allQuizzes() {
+
+        return ResponseEntity.ok(
+                quizMapper.convertListEntityToDTO(quizService.findAll())
+        );
+    }
+
+    // return all questions for requested question sheet id
+    @GetMapping(value = "/get-question-sheet{id}")
+    public ResponseEntity<List<QuestionDTO>> getQuestionSheet(@PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                questionService.convertQuestionsOfQuestionSheetToQuestionDTO(id)
+        );
+    }
+
+    // apply question score base on quiz id and question id
+    @PostMapping(value = "/apply-question-score")
+    public ResponseEntity<Map<String, Object>> applyQuestionScore(@RequestBody List<Map<String, Object>> question) {
+
+        questionService.applyScore(question);
+
+        JSONObject obj = new JSONObject();
+        obj.put("status", "success");
+        return ResponseEntity.ok(obj.toMap());
+    }
+
+    // delete question base on question id
+    @DeleteMapping(value = "/delete-question/{questionId}/{quizId_glob}")
+    public ResponseEntity<Map<String, Object>> deleteQuestion(@PathVariable Long questionId,
+                                                              @PathVariable Long quizId_glob) {
+
+        questionService.remove(questionId, quizId_glob);
+
+        JSONObject obj = new JSONObject();
+        obj.put("status", "success");
+        return ResponseEntity.ok(obj.toMap());
     }
 
 }

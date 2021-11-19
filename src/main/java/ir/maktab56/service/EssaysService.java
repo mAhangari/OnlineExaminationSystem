@@ -4,10 +4,13 @@ import ir.maktab56.model.Essays;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface EssaysService {
 
     Essays save(Essays question);
 
-    void creatEssays(List<Map<String, Object>> essays);
+    Optional<Essays> findById(Long id);
+
+    void creatOrUpdateEssays(List<Map<String, Object>> essays);
 }

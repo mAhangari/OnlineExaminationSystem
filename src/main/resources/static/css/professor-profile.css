@@ -349,6 +349,7 @@ button:hover {
 	background-color: #E64C65;
 }
 
+/* define gray color for call in class attribute */
 .gray_button {
 	background-color: #9099b7;
 }
@@ -361,30 +362,68 @@ button:hover {
 	flex-direction: column;
 }
 
+/* change display to none on element */
 .display_none {
-	display: none;
+    display: none;
 }
 
+/* add 50px margin top on element */
 .margin-top-50px {
-	margin-top: 50px;
+    margin-top: 50px;
 }
 
-#course_table, #course_table_quiz_information {
-	padding-top: 30px;
-	height: 100px;
-	width: 500px;
-	overflow-y: auto;
+/* add 30px margin top on element */
+.margin-top-30px {
+    margin-top: 30px;
 }
 
-#course_table_quiz_information button {
-	padding: 0;
+#course_table, #course_table_quiz_information, #quiz_information_table {
+    padding-top: 30px;
+    height: 300px;
+    width: 500px;
+    overflow-y: auto;
+}
+
+/* question bank table handle overflow */
+#question_bank {
+    padding-top: 30px;
+    height: 220px;
+    width: 590px;
+    overflow-y: auto;
+}
+
+/* questions table handle overflow */
+#questions_table {
+    padding-top: 30px;
+    height: 500px;
+    width: 590px;
+    overflow-y: auto;
+}
+
+/* change padding of button in course table quiz information to zero */
+#course_table_quiz_information button, #quiz_information_table button {
+    padding: 0;
+}
+
+/* change background of add question form */
+.add-question-div {
+    padding: 20px;
+    background-color: rgba(144, 153, 183, 0.78);
+    border-radius: 5px;
+}
+
+/* change shape of add multiple choice option button */
+#add_multipleChoice_option {
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
 }
 
 /* change direction of course */
 .course {
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 	height: 100vh;
 }
 
@@ -424,22 +463,32 @@ button:hover {
 
 /* course info design button */
 #edit_info_button {
-	background-color: #9099b7;
-	height: 20px;
-	width: 35px;
-	border: none;
-	color: white;
-	border-radius: 10px;
+    background-color: #9099b7;
+    height: 20px;
+    width: 35px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+}
+
+/* quiz button for question sheet design button */
+#question_sheet_button {
+    background-color: #9099b7;
+    height: 20px;
+    width: 100px;
+    border: none;
+    color: white;
+    border-radius: 5px;
 }
 
 /* quiz design delete button */
 #delete_info_button {
-	background-color: #E64C65;
-	height: 20px;
-	width: 50px;
-	border: none;
-	color: white;
-	border-radius: 10px;
+    background-color: #E64C65;
+    height: 20px;
+    width: 50px;
+    border: none;
+    color: white;
+    border-radius: 10px;
 }
 
 /* decorate input of create quiz section */
@@ -456,12 +505,27 @@ button:hover {
 /* background of create quiz page */
 #create_quiz_id {
 	background-color: rgba(189, 220, 220, 0.94);
-	height: 300px;
-	width: 300px;
-	border: 2px solid #ecf0f1;
-	border-radius: 10px;
+    height: 300px;
+    width: 300px;
+    border: 2px solid #ecf0f1;
+    border-radius: 10px;
 }
 
+/* define 100vh height */
 .height_100vh {
-	height: 100vh;
+    height: 100vh;
+}
+
+/* modify format of quiz option table, tr, td, th */
+.quiz_option_table table, .quiz_option_table tr,
+.quiz_option_table td, .quiz_option_table th {
+    background-color: gainsboro;
+    border: none;
+    padding: 5px;
+    text-align: left;
+}
+
+/* modify format of quiz option table border */
+.quiz_option_table table {
+    border: 1px solid rgb(187, 179, 168);
 }

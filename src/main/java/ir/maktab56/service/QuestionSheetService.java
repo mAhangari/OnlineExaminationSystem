@@ -3,6 +3,8 @@ package ir.maktab56.service;
 import ir.maktab56.model.QuestionSheet;
 import ir.maktab56.service.dto.QuestionSheetDTO;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface QuestionSheetService {
@@ -15,4 +17,6 @@ public interface QuestionSheetService {
 
     // convert questionSheet to Question SheetDTO by Quiz id
     QuestionSheetDTO convertQuestionSheetToQuestionSheetDTO(Long quizId);
+
+    void addQuestion(List<Map<String, Object>> question);
 }

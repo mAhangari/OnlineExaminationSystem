@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +22,6 @@ public class QuestionDTO {
     @NotBlank(message = "Question is mandatory")
     private String question;
 
-    private double score;
+    private Set<ScoreDTO> scores;
 
 }

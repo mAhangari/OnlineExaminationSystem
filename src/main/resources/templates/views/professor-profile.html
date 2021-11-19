@@ -28,6 +28,9 @@
         <li>
           <button id="all_course" class="sidebar">Courses</button>
         </li>
+        <li>
+          <button class="sidebar" id="all_quizzes">Quizzes</button>
+        </li>
       </ul>
     </div>
   </div>
@@ -65,7 +68,7 @@
       <!-- <p>dashboard</p> -->
     </div>
 
-    <!-- start of right container users button -->
+    <!-- start of right container courses button -->
     <div class="courses">
       <div class="course-up-container">
         <table>
@@ -92,7 +95,34 @@
         <button id="next" class="previousAndNextButton" type="button">NEXT</button>
       </div>
     </div>
-    <!-- end of right container users button -->
+    <!-- end of right container courses button -->
+
+    <!-- start of right container quizzes button -->
+    <div class="user_information_table course-up-container display_none" id="quiz_table">
+      <span class="" id="quiz_information_table">
+          <table>
+            <thead>
+              <th>Num</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Time</th>
+              <th>Question Sheet</th>
+            </thead>
+            <tbody id="quiz_info_tbody"></tbody>
+          </table>
+      </span>
+    </div>
+    <!-- end of right container quizzes button -->
+
+    <!-- start of right container question sheet table -->
+    <div class="user_information_table course-up-container display_none" id="question_sheet_table">
+      <span class="margin-top-30px quiz_option_table" id="questions_table">
+        <table style="width: 100%">
+          <tbody id="questions_table_body"></tbody>
+        </table>
+      </span>
+    </div>
+    <!-- end of right container question sheet table -->
 
     <!-- quiz information after click on info button in course table -->
     <div id="course_table_quizInformation" class="user_information_table course-up-container display_none">
@@ -142,143 +172,131 @@
               <th>Title</th>
               <th>Description</th>
               <th>Quiz Time</th>
+              <th>Add Question</th>
             </tr>
           </thead>
 
           <tbody id="edit_course_table_body">
-            <tr>
-              <td><input id="quiz_edit_title" type="text" required/></td>
-              <td><input id="quiz_edit_description" type="text" required/></td>
-              <td><input id="quiz_edit_time" type="number" min="0" max="360" required/></td>
-            </tr>
+          <tr>
+            <td><input id="quiz_edit_title" type="text" required/></td>
+            <td><input id="quiz_edit_description" type="text" required/></td>
+            <td><input id="quiz_edit_time" type="number" min="0" max="360" required/></td>
+            <td>
+              <button class="gray_button" id="quiz_question_sheet" onclick="$(this).chose_source()" type="button">Add
+                Question
+              </button>
+            </td>
+          </tr>
           </tbody>
         </Table>
 
-        <span class="margin-top-50px">
+        <span class="margin-top-30px" id="question_source_button">
+          <button class="gray_button" id="from_question_bank_button" onclick="$(this).question_bank()" type="button">From Question Bank</button>
+          <button class="gray_button" id="new_question_button" onclick="$(this).add_question()" type="button">New Question</button>
+        </span>
+
+        <span class="margin-top-30px quiz_option_table" id="question_bank">
+          <table style="width: 100%">
+            <tbody id="question_bank_table_body"></tbody>
+          </table>
+        </span>
+
+        <span class="margin-top-30px" id="add_quiz_button">
+          <button class="gray_button" id="quiz_add_button_essays" onclick="$(this).add_essays()" type="button">Add Essays</button>
+          <button class="gray_button" id="quiz_add_button_multipleChoice" onclick="$(this).add_multipleChoice()"
+                  type="button">Add Multiple Choice</button>
+        </span>
+
+        <span class="margin-top-30px">
           <button class="green_button" id="course_edit_button_save" type="submit">Save</button>
-          <button class="red_button course_edit_button_cancel" id="course_edit_button_cancel" type="button" onclick="$(this).quiz_back_function()">Cancel</button>
+          <button class="red_button course_edit_button_cancel" id="course_edit_button_cancel" type="button"
+                  onclick="$(this).quiz_back_function()">Cancel</button>
         </span>
       </form>
     </div>
     <!-- end of edit quiz table information -->
 
-    <!-- show user information -->
-    <div id="user_information_table_edit" class="user_information_table users-up-container">
-      <Table>
-        <thead>
-        <tr><th colspan="2">User Information</th></tr>
-        </thead>
-        <tbody id="user_information_table_body">
-        <tr><td class="left_td_size">First Name</td><td id="user_info_first_name" class="right_td_size"></td></tr>
 
-        <tr><td class="left_td_size">Last Name</td><td id="user_info_last_name" class="right_td_size"></td></tr>
+    <!-- start of add essays form -->
+    <div class="user_information_table course-up-container" id="add_essays">
+      <form action="" class="centralized_element" id="add_essays_form" method="post">
+        <div class="add-question-div">
+          <span>
+            <label for="add_essays_title">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTitle:</label>
+            <input id="add_essays_title" required type="text"/>
+            <label for="add_essays_score">Score:</label>
+            <input id="add_essays_score" type="number"/>
+          </span>
 
-        <tr><td class="left_td_size">Username</td><td id="user_info_username" class="right_td_size"></td></tr>
+          <input id="essays_id" type="hidden">
 
-        <tr><td class="left_td_size">User Type</td><td id="user_info_user_type" class="right_td_size"></td></tr>
-
-        <tr><td class="left_td_size">National Code</td><td id="user_info_national_code" class="right_td_size"></td></tr>
-
-        <tr><td class="left_td_size">User Id</td><td id="user_info_user_id" class="right_td_size"></td></tr>
-
-        <tr id="user_information_button">
-          <td colspan="2">
-            <button id="user_info_button_save" type="button" onclick="$(this).user_info_save_function()">Save</button>
-            <button class="green_button" id="user_info_button_change" type="button" onclick="$(this).user_info_change_function()">change</button>
-            <button class="red_button" id="user_info_button_cancel" type="button" onclick="$(this).user_info_cancel_function()">Cancel</button>
-          </td>
-        </tr>
-        </tbody>
-      </Table>
-    </div>
-
-    <!-- start of right container courser button -->
-    <div class="course">
-      <p id="messageID_2" style="color: #0f958a"></p>
-      <div id="course_table" class="users-up-container">
-        <table>
-          <thead>
-          <tr>
-            <th>Num</th>
-            <th>Title</th>
-            <th>Course Id</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Professor</th>
-            <th>Info</th>
-            <th>Edit</th>
-          </tr>
-          </thead>
-          <tbody id="records_table_body_all_course">
-          </tbody>
-        </table>
-      </div>
-
-      <div id="add_new_course">
-        <button class="green_button" id="add_course_button" type="button" onclick="$(this).add_course_function()">Add Course</button>
-      </div>
-    </div>
-    <!-- end of right container courser button -->
-
-    <!-- add new course -->
-    <div id="add_new_course_table" class="user_information_table users-up-container">
-      <p id="messageID"></p>
-      <form id="submit_course_info_data">
-        <Table>
-          <thead>
-          <tr><th colspan="2">Add New Course</th></tr>
-          </thead>
-          <tbody id="add_course_table_body">
-          <tr>
-            <td class="left_td_size"><label for="course_info_title">Title</label></td>
-            <td class="right_td_size"><input id="course_info_title" type="text" required/></td>
-          </tr>
-
-          <tr>
-            <td class="left_td_size"><label for="course_info_courseId">Course Id</label></td>
-            <td class="right_td_size"><input id="course_info_courseId" type="text" required/></td>
-          </tr>
-
-          <tr>
-            <td class="left_td_size"><label for="course_info_start_date">Start Date</label></td>
-            <td class="right_td_size"><input id="course_info_start_date" type="date" required/></td>
-          </tr>
-
-          <tr>
-            <td class="left_td_size"><label for="course_info_end_date">End Date</label></td>
-            <td class="right_td_size"><input id="course_info_end_date" type="date" required/></td>
-          </tr>
-
-          <tr id="add_course_table_button_button">
-            <td colspan="2">
-              <button class="green_button" id="course_info_button_save" type="submit">Save</button>
-              <button class="red_button" id="course_info_button_cancel" type="button" onclick="$(this).course_info_cancel_function()">Cancel</button>
-            </td>
-          </tr>
-          </tbody>
-        </Table>
+          <span class="margin-top-30px" style="display: flex; align-items: flex-start">
+            <label for="add_essays_question">Question:&nbsp</label>
+            <textarea cols="50" id="add_essays_question" required rows="5"></textarea>
+          </span>
+        </div>
+        <span class="margin-top-30px">
+          <button class="green_button" id="essays_add_button_save" type="submit">Save</button>
+          <button class="red_button course_edit_button_cancel" id="add_essays_button_cancel"
+                  onclick="$(this).quiz_back_function()" type="button">Cancel</button>
+        </span>
       </form>
     </div>
+    <!-- end of add essays form -->
 
-    <!-- user information after click button info in course table -->
-    <div id="course_table_userInformation" class="user_information_table users-up-container">
-        <span id="course_table_user_information">
-            <table>
-              <thead>
-                <th>Num</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>National Code</th>
-              </thead>
-              <tbody id="111"></tbody>
-            </table>
+    <!-- start of add multiple choice form -->
+    <div class="user_information_table course-up-container" id="add_multipleChoice">
+      <form action="" class="centralized_element" id="add_multipleChoice_form" method="post">
+        <div class="add-question-div">
+          <span>
+            <label for="add_multipleChoice_title">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTitle:</label>
+            <input id="add_multipleChoice_title" required type="text"/>
+            <label for="add_multipleChoice_score">Score:</label>
+            <input id="add_multipleChoice_score" type="number"/>
           </span>
-      <span class="margin-top-50px">
-            <button class="red_button course_edit_button_cancel" id="123" type="button" onclick="$(this).course_info_cancel_function()">Back</button>
+
+          <span class="margin-top-30px" style="display: flex; align-items: flex-start">
+            <label for="add_multipleChoice_question">Question:&nbsp</label>
+            <textarea cols="50" id="add_multipleChoice_question" required rows="5"></textarea>
           </span>
+
+          <input id="multipleChoice_id" type="hidden">
+
+          <span class="margin-top-30px" style="display: flex; align-items: center">
+            <label for="add_multipleChoice_option">&nbsp&nbspOption:&nbsp&nbsp</label>
+            <button id="add_multipleChoice_option" onclick="$(this).add_text_of_option()" type="button"><i
+                    class="fas fa-plus fa-2x" style="color: #9099b7"></i></button>
+            <textarea cols="24" id="text_of_option" rows="2" style="margin-left: 20px; display: none"></textarea>
+            <label for="multipleChoice_correct_answer" id="multipleChoice_correct_answer_label"
+                   style="display: none; margin-left: 5px">
+              Correct Answer:
+              <select id="multipleChoice_correct_answer"></select>
+            </label>
+
+          </span>
+        </div>
+        <span class="margin-top-30px">
+          <button class="green_button" id="multipleChoice_add_button_save" type="submit">Save</button>
+          <button class="red_button course_edit_button_cancel" id="add_multipleChoice_button_cancel"
+                  onclick="$(this).quiz_back_function()" type="button">Cancel</button>
+        </span>
+
+        <span class="margin-top-50px quiz_option_table display_none" id="multipleChoice_table">
+          <table>
+            <thead>
+              <tr>
+                <td>Q:</td>
+                <td id="question_text"></td>
+              </tr>
+            </thead>
+            <tbody id="question_text_option_table_body">
+            </tbody>
+          </table>
+        </span>
+      </form>
     </div>
+    <!-- end of add multiple choice form -->
+
 
   </div> <!-- end right-container -->
 </div> <!-- end main-container -->

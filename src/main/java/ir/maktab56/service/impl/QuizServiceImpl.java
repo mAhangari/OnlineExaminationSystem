@@ -1,6 +1,7 @@
 package ir.maktab56.service.impl;
 
 import ir.maktab56.model.Course;
+import ir.maktab56.model.QuestionSheet;
 import ir.maktab56.model.Quiz;
 import ir.maktab56.repository.QuizRepository;
 import ir.maktab56.service.CourseService;
@@ -65,10 +66,19 @@ public class QuizServiceImpl implements QuizService {
         Course course = courseService.findCoursesByCourseId((String) quiz.get(3).get("courseId"));
 
         Quiz newQuiz = new Quiz();
+        QuestionSheet questionSheet = new QuestionSheet();
+
         newQuiz.setTitle(title);
         newQuiz.setDescription(description);
         newQuiz.setQuizTime(quizTime);
         newQuiz.setCourse(course);
+        newQuiz.setQuestionSheet(questionSheet);
+
         repository.save(newQuiz);
+    }
+
+    @Override
+    public List<Quiz> findAll() {
+        return repository.findAll();
     }
 }
