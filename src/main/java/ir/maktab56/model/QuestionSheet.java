@@ -22,7 +22,7 @@ public class QuestionSheet extends BaseEntity<Long> {
     @ManyToMany
     private Set<Question> questions = new HashSet<>();
 
-    @OneToOne
+    @OneToOne(mappedBy = "questionSheet")
     private Quiz quiz;
 
     public void addQuestion(Question question) {

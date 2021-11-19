@@ -1,12 +1,11 @@
 package ir.maktab56.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = Question.TABLE_NAME)
@@ -18,9 +17,10 @@ import javax.validation.constraints.NotBlank;
 public class Question extends BaseEntity<Long> {
 
     public static final String TABLE_NAME = "question_table";
-    public static final String QUESTION_BANK_ID = "question_bank_id";
-    public static final String PROFESSOR_ID = "professor_id";
-    public static final String TITLE = "title";
+    private static final String QUESTION_BANK_ID = "question_bank_id";
+    private static final String PROFESSOR_ID = "professor_id";
+    private static final String TITLE = "title";
+    private static final String SCORE_ID = "score_id";
 
     @Column(name = TITLE, nullable = false)
     @NotBlank
@@ -29,13 +29,14 @@ public class Question extends BaseEntity<Long> {
     @Column(nullable = false)
     private String question;
 
-    private double score;
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<Score> scores = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = PROFESSOR_ID)
     private Professor professor;
 
-    @ManyToOne
-    @JoinColumn(name = QUESTION_BANK_ID)
-    private QuestionBank questionBank;
+    public void addScore(Score score) {
+        scores.add(score);
+    }
 }
