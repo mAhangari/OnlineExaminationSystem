@@ -335,6 +335,24 @@ button:hover {
 	border-radius: 50%;
 }
 
+/* create middle circle in buttom of page to count page */
+.middle_circle {
+	border: 1px solid #9099b7;
+	background-color: white;
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+}
+
+/* create litle circle in buttom of page to count page more than 5 */
+.litle_circle {
+	border: 1px solid #9099b7;
+	background-color: white;
+	height: 5px;
+	width: 5px;
+	border-radius: 50%;
+}
+
 /* hover of circle */
 .circle:hover {
 	cursor: pointer;
