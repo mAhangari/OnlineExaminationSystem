@@ -10,6 +10,7 @@
   <script src="/JavaScript/jquery-3.6.0.min.js"></script>
   <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
   <script src="/JavaScript/professor-profile.js"></script>
+  <script src="/JavaScript/next_previous.js"></script>
 </head>
 <body>
 <div class="main-container">
@@ -64,9 +65,36 @@
       <p id="message_text"></p>
     </div>
 
+    <!-- start of right container dashboard button -->
     <div class="dashboard">
-      <!-- <p>dashboard</p> -->
+      <div class="dashboard-left-container">
+        <div class="card">
+          <span>
+            <img alt="professor picture" id="professor-image" src="" style="width:100%">
+            <form class="display_none" enctype="multipart/form-data" id="add-professor-image"
+                  style="margin: 20px; justify-content: center; align-items: center">
+              <input accept="image/png, image/jpeg" name="image" type="file">
+              <input type="submit"/>
+            </form>
+          </span>
+
+          <span><i class="fas fa-user-edit" id="fa-user-edit-click" style="float: right"></i></span>
+          <h1>Professor Name</h1>
+          <p class="title">CEO & Founder, Example</p>
+          <p>Harvard University</p>
+          <div style="margin: 24px 0;">
+            <a href="#"><i class="fa fa-dribbble"></i></a>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-linkedin"></i></a>
+            <a href="#"><i class="fa fa-facebook"></i></a>
+          </div>
+          <p>
+            <button>Contact</button>
+          </p>
+        </div>
+      </div>
     </div>
+    <!-- end of right container dashboard button -->
 
     <!-- start of right container courses button -->
     <div class="courses">
@@ -87,13 +115,7 @@
         </table>
       </div>
 
-      <div class="course-down-container">
-        <button id="previous" class="previousAndNextButton" type="button">PREVIOUS</button>
-        <span class="circle"></span>
-        <span class="circle"></span>
-        <span class="circle"></span>
-        <button id="next" class="previousAndNextButton" type="button">NEXT</button>
-      </div>
+      <div class="course-down-container" id="previousAndNextButton"></div>
     </div>
     <!-- end of right container courses button -->
 
@@ -225,7 +247,7 @@
             <label for="add_essays_title">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTitle:</label>
             <input id="add_essays_title" required type="text"/>
             <label for="add_essays_score">Score:</label>
-            <input id="add_essays_score" type="number"/>
+            <input id="add_essays_score" max="360" min="0" type="number"/>
           </span>
 
           <input id="essays_id" type="hidden">
@@ -252,7 +274,7 @@
             <label for="add_multipleChoice_title">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTitle:</label>
             <input id="add_multipleChoice_title" required type="text"/>
             <label for="add_multipleChoice_score">Score:</label>
-            <input id="add_multipleChoice_score" type="number"/>
+            <input id="add_multipleChoice_score" max="360" min="0" type="number"/>
           </span>
 
           <span class="margin-top-30px" style="display: flex; align-items: flex-start">

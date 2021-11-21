@@ -1,12 +1,7 @@
 $(document).ready(function () {
 
-    let response_glob;
-    let rowPerPage = 3;
-    let start = 0;
-    let end = rowPerPage;
     let quizId_glob;
     let courseId_glob;
-    let question_sheet_id;
 
 
     $(".sidebar").after("<hr style='border-color: rgba(245,245,245,0.27)'>");
@@ -23,14 +18,20 @@ $(document).ready(function () {
 
     // click on dashboard
     $("#dashboard").click(function () {
-        display_on_off(".dashboard", "block");
+        display_on_off(".dashboard", "flex");
+    });
+
+    // click on fa-user-edit
+    $("#fa-user-edit-click").click(function () {
+        $("#professor-image").css('display', 'none');
+        $("#add-professor-image").css('display', 'flex');
     });
 
     // click on Courses
     $("#all_course").click(function () {
         display_on_off("#messages", "flex");
-        start = 0;
-        end = rowPerPage;
+        $start = 0;
+        $end = $rowPerPage;
         $.ajax({
             url: `/professor/professor-courses`,
             method: "GET",
@@ -41,9 +42,10 @@ $(document).ready(function () {
                     $('#message_text').html("There is no course!!!");
                 } else {
                     display_on_off(".courses", "flex");
-                    response_glob = response;
+                    $response_glob = response;
                     $(function () {
                         $(".courses tr:has(td)").remove();
+                        $(this).next_previous_button();
                         table_data(response, "course");
                     });
                 }
@@ -67,7 +69,7 @@ $(document).ready(function () {
                 $('#message_text').html("There is no quiz!!!");
             } else {
                 display_on_off("#quiz_table", "flex");
-                response_glob = response;
+                $response_glob = response;
                 $(function () {
                     course_table_data(response, "all_quiz_info");
                 });
@@ -81,7 +83,7 @@ $(document).ready(function () {
     function table_data(response, section) {
         let tr = [];
         $.each(response, function (i, item) {
-            if (i < rowPerPage) {
+            if (i < $rowPerPage) {
                 row_data_iteration(tr, i, item, section);
             }
         });
@@ -161,6 +163,12 @@ $(document).ready(function () {
         $("#all_quizzes").trigger("click")
     };
 
+    // return to quizzes table if question sheet is empty
+    $.fn.dashboard_back_function = function () {
+        display_on_off(".dashboard", "flex");
+        $("#dashboard").trigger("click");
+    };
+
     // after apply score to the question
     $.fn.successful_apply_score = function () {
         $(this).question_sheet_information(quizId_glob);
@@ -205,33 +213,15 @@ $(document).ready(function () {
         display_on_off("#create_quiz", "flex");
     };
 
-    // click on next button
-    $("#next").click(function () {
-        if (end < Object.keys(response_glob).length) {
-            start = start + rowPerPage;
-            end = end + rowPerPage;
-        }
-        page_data_change();
-    });
-
-    // click on previous button
-    $("#previous").click(function () {
-        if (start >= rowPerPage) {
-            start = start - rowPerPage;
-            end = end - rowPerPage;
-        }
-        page_data_change();
-    });
-
     // function for change row per page
-    function page_data_change() {
+    $.fn.page_data_change = function () {
         let tr = [];
-        $.each(response_glob, function (i, item) {
-            if (i >= start && i < end) {
+        $.each($response_glob, function (i, item) {
+            if (i >= $start && i < $end) {
                 row_data_iteration(tr, i, item, "course");
             }
         });
-        $("#records_table_body_professor_course").html(tr);
+        $("#records_table_body_all_course").html(tr);
     }
 
     // after click on submit in create quiz
@@ -730,6 +720,52 @@ $(document).ready(function () {
         })
     });
 
+    // after click on submit in add professor image
+    $("#add-professor-image").on('submit', function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        console.log(formData);
+
+        $.ajax({
+            url: "/image/upload-profile-picture",
+            type: "POST",
+            enctype: "multipart/form-data",
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            data: formData,
+            cache: false
+        }).done(function (response) {
+            console.log(response);
+            // $("#message_text").html("add question was successful!!!")
+            // display_on_off("#messages", "flex");
+            // setTimeout($(this).add_essays_back_function, 1500);
+        }).fail(function (errMsg) {
+            $("#message_text").html(errMsg.responseJSON.message)
+            display_on_off("#messages", "flex");
+            setTimeout($(this).dashboard_back_function, 1500);
+
+        })
+    });
+
+    // after load dashboard
+    $(function () {
+
+        console.log("getImage");
+
+        $.ajax({
+            url: "/image/get-profile-picture",
+            type: "GET",
+            contentType: "application/octet-stream",
+            processData: false,
+
+        }).done(function (response) {
+            $('#professor-image').attr('src', `data:image/jpeg;base64, ${response}`);
+        }).fail(function (errMsg) {
+            console.log(errMsg);
+        })
+    });
+
     // clean multiple choice question form
     function clean_multipleChoice_form() {
         $("#add_multipleChoice_title").val("");
@@ -789,6 +825,8 @@ $(document).ready(function () {
             $("#quiz_table").css("display", "none");
         if (`"${divId}"` !== "#question_sheet_table")
             $("#question_sheet_table").css("display", "none");
+        if (`"${divId}"` !== "#previousAndNextButton")
+            $("#previousAndNextButton").css("display", "none");
 
         $(`${divId}`).css("display", `${displayType}`);
         $('#course_table_quiz_info').html("");
