@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Base64;
 
 @RestController
@@ -42,10 +41,7 @@ public class ImageController {
     @GetMapping(value = "/get-profile-picture")
     public ResponseEntity<byte[]> getProfilePicture() {
 
-        UserProfilePicture profilePicture = profilePictureService.getProfilePictureByCurrentUser().orElseThrow(
-
-        );
-        System.out.println(Arrays.toString(profilePicture.getData()));
+        UserProfilePicture profilePicture = profilePictureService.getProfilePictureByCurrentUser().orElseThrow();
 
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
