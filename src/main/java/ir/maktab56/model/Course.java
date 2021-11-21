@@ -41,4 +41,7 @@ public class Course extends BaseEntity<Long> {
     @ManyToMany
     private Set<Student> students = new HashSet<>();
 
+    @OneToMany(mappedBy = "course")
+    private Set<Quiz> quizzes = new HashSet<>();
+
 }

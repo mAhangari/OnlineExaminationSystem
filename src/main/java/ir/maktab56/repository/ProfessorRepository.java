@@ -16,7 +16,7 @@ public interface ProfessorRepository extends UserRepository<Professor> {
 
     @Modifying
     @Query("update Professor p set p.firstName = :firstName, p.lastName = :lastName, p.nationalCode = :nationalCode," +
-            " p.personnelId = :userId, p.userType = Student where p.username = :username")
+            " p.personnelId = :userId, p.userType = 'PROFESSOR' where p.username = :username")
     void updateProfessor(
             @Param(value = "firstName") String firstName, @Param(value = "lastName") String lastName,
             @Param(value = "nationalCode") String nationalCode, @Param(value = "userId") Long userId,
