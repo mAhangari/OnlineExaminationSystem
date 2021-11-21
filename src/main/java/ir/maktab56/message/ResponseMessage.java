@@ -11,12 +11,6 @@ import lombok.Setter;
 @Setter
 public class ResponseMessage {
 
-    private String name;
-
-    private String url;
-
-    private String type;
-
-    private long size;
+    private String message;
 
 }
