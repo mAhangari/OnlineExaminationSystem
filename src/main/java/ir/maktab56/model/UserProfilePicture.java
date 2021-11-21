@@ -26,7 +26,7 @@ public class UserProfilePicture extends BaseEntity<Long> {
     private byte[] data;
 
     @OneToOne
-    @JoinColumn(name = USER_ID)
+    @JoinColumn(name = USER_ID, unique = true, nullable = false)
     private User user;
 
 }
