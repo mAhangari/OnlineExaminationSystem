@@ -12,6 +12,66 @@
 	width: 20vw;
 }
 
+/* profile card in dashboard */
+.dashboard .card {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	max-width: 300px;
+	margin: auto;
+	text-align: center;
+	font-family: arial, serif;
+}
+
+/* title of dashboard card */
+.dashboard .title {
+	color: grey;
+	font-size: 18px;
+}
+
+/* button of dashboard */
+.dashboard button {
+	border: none;
+	outline: 0;
+	display: inline-block;
+	padding: 8px;
+	color: white;
+	background-color: #000;
+	text-align: center;
+	cursor: pointer;
+	width: 100%;
+	font-size: 18px;
+}
+
+/* a link of dashboard */
+.dashboard a {
+	text-decoration: none;
+	font-size: 22px;
+	color: black;
+}
+
+/* button and a link hover of dashboard */
+.dashboard button:hover, a:hover {
+	opacity: 0.7;
+}
+
+/* modify dashboard tab */
+.dashboard {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+
+	height: 100vh;
+}
+
+/* dashboard tab left container */
+.dashboard-left-container {
+	padding: 60px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
 /* right container */
 .right-container {
 	background-color: rgb(241, 240, 240);
@@ -537,13 +597,25 @@ button:hover {
 /* modify format of quiz option table, tr, td, th */
 .quiz_option_table table, .quiz_option_table tr,
 .quiz_option_table td, .quiz_option_table th {
-    background-color: gainsboro;
-    border: none;
-    padding: 5px;
-    text-align: left;
+	background-color: gainsboro;
+	border: none;
+	padding: 5px;
+	text-align: left;
 }
 
 /* modify format of quiz option table border */
 .quiz_option_table table {
-    border: 1px solid rgb(187, 179, 168);
+	border: 1px solid rgb(187, 179, 168);
+}
+
+/* change hover of fa-user-edit */
+.fa-user-edit:hover {
+	color: #0f958a;
+	cursor: pointer;
+}
+
+/* change fa-user-edit view  */
+.fa-user-edit {
+	color: #cccccc;
+	cursor: pointer;
 }
