@@ -40,6 +40,14 @@ public class UserProfilePictureServiceImpl implements UserProfilePictureService 
     }
 
     @Override
+    public Optional<UserProfilePicture> getProfilePictureByCurrentUser() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return findByUser_Username(authentication.getName());
+    }
+
+    @Override
     public UserProfilePicture store(MultipartFile image) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<User> user = userService.findUserByUsername(authentication.getName());

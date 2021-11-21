@@ -12,5 +12,7 @@ public interface UserProfilePictureService {
 
     Optional<UserProfilePicture> findById(Long id);
 
+    Optional<UserProfilePicture> getProfilePictureByCurrentUser();
+
     UserProfilePicture store(MultipartFile image) throws IOException;
 }
