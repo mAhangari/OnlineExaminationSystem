@@ -94,26 +94,6 @@ button:hover {
 	cursor: pointer;
 }
 
-/* tooltip modification */
-.tooltip {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	visibility: hidden;
-	text-align: center;
-	font-family: 'Times New Roman', Times, serif;
-	font-size: 14px;
-	font-weight: 450;
-	border-radius: 6px;
-	padding: 5px 6px;
-	position: absolute;
-	width: 100px;
-	height: 100px;
-	top: 34px;
-	right: 8px;
-}
-
 .tooltip a {
 	padding: 5px;
 	text-decoration: none;
@@ -213,20 +193,6 @@ button:hover {
 .select-all span:hover, input:hover {
 	background-color: #ccc;
 	cursor: pointer;
-}
-
-/* The container */
-.container {
-	display: flex;
-	position: relative;
-	justify-content: center;
-	align-items: center;
-	cursor: pointer;
-	font-size: 22px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
 }
 
 /* Hide the browser's default checkbox */
@@ -372,27 +338,4 @@ button:hover {
 	height: 30px;
 	width: 80px;
 	color: rgb(255, 255, 255);
-}
-
-/* style message body */
-#messages {
-	margin-top: 50px;
-	display: none;
-	justify-content: center;
-	align-items: center;
-}
-
-/* style message text */
-#message_text {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background-color: blanchedalmond;
-	color: chocolate;
-	width: 500px;
-	height: 100px;
-	font-family: 'Times New Roman';
-	font-weight: bold;
-	font-size: 30px;
-	border-radius: 10px;
 }
