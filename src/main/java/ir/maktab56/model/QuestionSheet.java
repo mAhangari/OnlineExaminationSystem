@@ -25,6 +25,9 @@ public class QuestionSheet extends BaseEntity<Long> {
     @OneToOne(mappedBy = "questionSheet")
     private Quiz quiz;
 
+    @OneToMany(mappedBy = "questionSheet", cascade = CascadeType.ALL)
+    private Set<Answer> answers;
+
     public void addQuestion(Question question) {
         this.questions.add(question);
     }
