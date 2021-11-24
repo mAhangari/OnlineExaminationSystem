@@ -2,7 +2,9 @@ $(document).ready(function () {
 
     let quizId_glob;
     let courseId_glob;
-
+    let clear_time_glob;
+    let tr = [];
+    $answers = [];
 
     $(".sidebar").after("<hr style='border-color: rgba(245,245,245,0.27)'>");
     $("#profile").after("<hr style='border-color: rgba(245,245,245,0.27)'>").css("textAlign", "center");
@@ -159,29 +161,6 @@ $(document).ready(function () {
         $(this).question_sheet_information(quizId_glob);
     };
 
-    // after click on question sheet in quizzes table
-    $.fn.question_sheet_information = function (quizId) {
-        quizId_glob = quizId;
-        $.ajax({
-            url: `/professor/get-question-sheet${quizId}`,
-            type: "GET",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-        }).done(function (response) {
-            if (response.length === 0) {
-                $("#message_text").html("There is no question sheet!!!");
-                display_on_off("#messages", "flex");
-                setTimeout($(this).question_sheet_back_function, 1500);
-            } else {
-                display_on_off("#question_sheet_table", "flex");
-                createQuestions(response);
-            }
-
-        }).fail(function (errMsg) {
-            console.log(errMsg);
-        })
-    };
-
     // after click on save in add essays
     $.fn.add_essays_back_function = function () {
         display_on_off("#quiz-section", "flex");
@@ -208,33 +187,6 @@ $(document).ready(function () {
         });
         $("#records_table_body_all_course").html(tr);
     }
-
-    // after click on submit in create quiz
-    $(document).on('submit', '#submit_new_quiz', function (event) {
-        event.preventDefault();
-
-        let data = [
-            {title: $("#quiz_title_id").val()},
-            {description: $("#quiz_description_id").val()},
-            {quizTime: $("#quiz_time_id").val()},
-            {courseId: courseId_glob}
-        ];
-
-        $.ajax({
-            url: "/professor/create-quiz",
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(data)
-        }).done(function (response) {
-            $("#message_text").html("Create Quiz was successful!!!")
-            display_on_off("#messages", "flex");
-            setTimeout($(this).quiz_back_function, 1500);
-
-        }).fail(function (errMsg) {
-            console.log(errMsg);
-        });
-    });
 
     // click on information button in course table and get information from server and display on table
     $.fn.quiz_information_course_table = function (courseId) {
@@ -271,26 +223,82 @@ $(document).ready(function () {
 
     // click on start button in quiz table
     $.fn.start_quiz = function (quizId) {
-
-        display_on_off("#quiz-section", "flex");
-        $(this).timer_function(15);
+        quizId_glob = quizId;
 
         $.ajax({
             url: `/student/start-quiz/${quizId}`,
             type: "GET",
             contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                quizId_glob = response.id;
-                $('#quiz_edit_title').val(response.title);
-                $('#quiz_edit_description').val(response.description);
-                $('#quiz_edit_time').val(response.quizTime);
-            },
-            error: function (errMsg) {
-                console.log(errMsg);
-            }
+            dataType: "json"
+        }).done(function (response) {
+            console.log(response);
+            display_on_off("#quiz-section", "flex");
+            $(this).timer_function(response.quizTimeLeft);
+            $(this).createQuestions(response.questions);
+
+        }).fail(function (errMsg) {
+            $("#message_text").html(errMsg.responseText)
+            display_on_off("#messages", "flex");
+            setTimeout($(this).quiz_back_function, 1500);
         });
     };
+
+    // after quiz time is finished this function will be call from inside the timer_function method
+    $.fn.end_of_quiz = function () {
+
+        let answers = [{quizId: quizId_glob}];
+
+        for (let index = 0; index < $answers.length; index++) {
+            console.log($answers[index]);
+            answers.push($answers[index]);
+        }
+
+        $.ajax({
+            url: "/student/set-answer",
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(answers)
+        }).done(function (response) {
+            clearInterval(clear_time_glob);
+            $("#message_text").html("Answer saved successfully!!!");
+            display_on_off("#messages", "flex");
+            setTimeout($(this).quiz_back_function, 1500);
+
+        }).fail(function (errMsg) {
+            console.log(errMsg);
+        });
+    }
+
+    // create question table
+    $.fn.createQuestions = function (question_list) {
+        $("#question_sheet_table").css("display", "block");
+        $(this).iteration_input(question_list, tr);
+        $(this).create_answer();
+    };
+
+    $.fn.create_answer = function () {
+        $.each(tr, function (i, item) {
+            if (item.hasOwnProperty("option")) {
+                if ($(`#question_option_${$answers[i].questionId}`).find('td').eq(1).text() !== "") {
+                    $("#questions_table_body tr").each(function () {
+                        if (($(this).find('input[name="checkmarkInput"]').is(":checked"))) {
+                            let option_val = $(this).find('td').eq(1).text();
+                            let result = option_val.match(/(?<=\d:\s\s\s).+/);
+                            $answers[i].answer = result[0];
+                        }
+                    });
+                }
+
+            } else if (item.hasOwnProperty("context")) {
+                if ($(`#question_context_${$answers[i].questionId}`).val()) {
+
+                    let answer_val = $(`#question_context_${$answers[i].questionId}`).val();
+                    $answers[i].answer = answer_val;
+                }
+            }
+        })
+    }
 
     // timer function
     $.fn.timer_function = function (time) {
@@ -302,9 +310,13 @@ $(document).ready(function () {
         let clear_time = setInterval(function () {
             minutes--;
             $('.timer').text($(this).get_elapsed_time_string(minutes));
-            if (minutes === 0)
+            if (minutes === 0) {
                 clearInterval(clear_time);
+                $(this).end_of_quiz();
+            }
         }, 1000);
+
+        clear_time_glob = clear_time;
 
         $.fn.get_elapsed_time_string = function (total_seconds) {
 
@@ -336,398 +348,16 @@ $(document).ready(function () {
         }
     }
 
-    // click on add quiz button in edit quiz table
-    $.fn.add_question = function () {
-        $("#question_source_button").css("display", "none");
-        $("#add_quiz_button").css("display", "inline");
-    };
-
-    // click on question bank button in edit quiz table
-    $.fn.question_bank = function () {
-        $("#question_source_button").css("display", "none");
-        $("#question_bank").css("display", "inline");
-
-        $.ajax({
-            url: "/professor/get-questions",
-            type: "get",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-        }).done(function (response) {
-            if (response.size === 0) {
-                $("#message_text").html("Question Bank is empty!!!")
-                display_on_off("#messages", "flex");
-                setTimeout($(this).add_essays_back_function, 1500);
-            } else
-                createQuestionBankBody(response);
-
-        }).fail(function (errMsg) {
-            console.log(errMsg);
-        })
-    };
-
-    // create table body of question bank
-    function createQuestionBankBody(question_list) {
-        let tr = [];
-        $.each(question_list, function (i, item) {
-            let $tr;
-            let $tr_new;
-            let tr_new = [];
-            if (!item.hasOwnProperty("options")) {
-                $tr = $('<tr>').append(
-                    $('<td>').text("Q:"),
-                    $('<td>').text(item.question),
-                    $('<td style="width: 120px">').append(
-                        `<button class="gray_button" type='button' onclick='$(this).edit_question_information(${JSON.stringify(item)})'>Edit</button>
-                         <button class="green_button" type='button' onclick='$(this).add_question_from_questionBank(\"${item.id}\")'>Add</button>`
-                    )
-                );
-            } else {
-                $tr = $('<tr style="width: 100%">').append(
-                    $('<td>').text("Q:"),
-                    $('<td>').text(item.question),
-                    $('<td style="width: 120px">').append(
-                        `<button class="gray_button" type='button' onclick='$(this).edit_question_information(${JSON.stringify(item)})'>Edit</button>
-                        <button class="green_button" type='button' onclick='$(this).add_question_from_questionBank(\"${item.id}\")'>Add</button>`
-                    )
-                );
-                $.each(item.options, function (i, item) {
-                    $tr_new = $('<tr>').append(
-                        $('<td>').text(""),
-                        $('<td>').html(i + 1 + ":&nbsp&nbsp&nbsp" + item)
-                    )
-                    tr_new.push($tr_new[0]);
-                });
-            }
-            tr.push($tr[0]);
-            if ($tr_new !== undefined) {
-                for (let i = 0; i < tr_new.length; i++) {
-                    tr.push(tr_new[i]);
-                }
-            }
-            tr.push("<tr><td></td><td><hr></td></tr>");
-
-        });
-        $("#question_bank_table_body").html(tr);
-    }
-
-    // all questions for specified quiz
-    function createQuestions(question_list) {
-        let tr = [];
-        let total_score = 0;
-        $.each(question_list, function (i, item) {
-            let $tr;
-            let $tr_new;
-            let tr_new = [];
-            let score = "";
-            if (item.scores.length !== 0) {
-                score = item.scores[0].score;
-                total_score += score;
-            }
-            if (!item.hasOwnProperty("options")) {
-                $tr = $('<tr>').append(
-                    $('<td>').text("Q:"),
-                    $('<td>').text(item.question),
-                    $('<td style="width: 195px">').append(
-                        `<input style="width: 50px" value="${score}" id="input_number_${item.id}" type='number' placeholder="Score"/>
-                         <button class="green_button" type='button' onclick='$(this).apply_score_for_question(\"${item.id}\")'>Apply</button>
-                         <button class="red_button" type='button' onclick='$(this).delete_question(\"${item.id}\")'>Delete</button>`
-                    )
-                );
-            } else {
-                $tr = $('<tr style="width: 100%">').append(
-                    $('<td>').text("Q:"),
-                    $('<td>').text(item.question),
-                    $('<td style="width: 195px">').append(
-                        `<input style="width: 50px" value="${score}" id="input_number_${item.id}" type='number' placeholder="Score"/>
-                        <button class="green_button" type='button' onclick='$(this).apply_score_for_question(\"${item.id}\")'>Apply</button>
-                        <button class="red_button" type='button' onclick='$(this).delete_question(\"${item.id}\")'>Delete</button>`
-                    )
-                );
-                $.each(item.options, function (i, item) {
-                    $tr_new = $('<tr>').append(
-                        $('<td>').text(""),
-                        $('<td>').html(i + 1 + ":&nbsp&nbsp&nbsp" + item)
-                    )
-                    tr_new.push($tr_new[0]);
-                });
-            }
-            tr.push($tr[0]);
-            if ($tr_new !== undefined) {
-                for (let i = 0; i < tr_new.length; i++) {
-                    tr.push(tr_new[i]);
-                }
-            }
-            tr.push("<tr><td></td><td><hr></td></tr>");
-
-        });
-        tr.push(
-            `<tr>
-                <td></td>
-                <td></td>
-                <td>Total Score: ${total_score}</td>
-            </tr>`
-        );
-        $("#questions_table_body").html(tr);
-    }
-
-    // edit question information
-    $.fn.edit_question_information = function (question) {
-        if (!question.hasOwnProperty("options")) {
-            $(this).add_essays();
-            $("#add_essays_title").val(question.title);
-            if (question.scores.length !== 0)
-                $("#add_essays_score").val(question.scores[0].score);
-            $("#add_essays_question").val(question.question);
-            $("#essays_id").val(question.id);
-        } else {
-            $(this).add_multipleChoice();
-
-            $("#add_multipleChoice_title").val(question.title);
-            if (question.scores.length !== 0)
-                $("#add_multipleChoice_score").val(question.scores[0].score);
-            $("#add_multipleChoice_question").val(question.question);
-            $("#multipleChoice_id").val(question.id);
-            $("#multipleChoice_correct_answer").val(question.correctAnswer);
-            $("#question_text").html(question.question);
-            let tr = [];
-            $.each(question.options, function (i, item) {
-                let $tr = $('<tr>').append(
-                    $('<td>').text(i + 1),
-                    $('<td style="width: 500px" class="td_multipleOption">').text(item),
-                    $('<td>').html(`<button type='button' onclick='$(this).removeOption(\"${item}\")'>remove</button>`)
-                );
-                tr.push($tr[0]);
-                $("#multipleChoice_correct_answer").append(
-                    `<option value="${item}">
-                    ${i + 1}
-                </option>`
-                );
-            });
-            $("#question_text_option_table_body").html(tr);
-            $("#multipleChoice_table").css("display", "inline");
-            $("#multipleChoice_correct_answer_label").css("display", "inline");
-            $("#text_of_option").css("display", "inline");
-        }
-    }
-
-    // click on add from question bank table list
-    $.fn.add_question_from_questionBank = function (questionId) {
-        let data = [
-            {questionId: questionId},
-            {quizId: quizId_glob}
-        ];
-        $.ajax({
-            url: "/professor/add-question",
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(data)
-        }).done(function (response) {
-            $("#message_text").html("add question was successful!!!")
-            display_on_off("#messages", "flex");
-            setTimeout($(this).add_question_back_function, 1500);
-            clean_multipleChoice_form();
-        }).fail(function (errMsg) {
-            console.log(errMsg);
-        })
-    }
-
-    // click on apply in question sheet table
-    $.fn.apply_score_for_question = function (questionId) {
-        if ($(`#input_number_${questionId}`).val() !== "") {
-            let data = [
-                {questionId: questionId},
-                {quizId: quizId_glob},
-                {score: $(`#input_number_${questionId}`).val()}
-            ];
-            $.ajax({
-                url: "/professor/apply-question-score",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: JSON.stringify(data)
-            }).done(function (response) {
-                $("#message_text").html("apply score was successful!!!")
-                display_on_off("#messages", "flex");
-                setTimeout($(this).successful_apply_score, 1500);
-            }).fail(function (errMsg) {
-                console.log(errMsg);
-            })
-        } else {
-            $("#message_text").html("Enter the score first!!!")
-            display_on_off("#messages", "flex");
-            setTimeout($(this).successful_apply_score, 1500);
-        }
-
-    }
-
-    // click on delete in question sheet table
-    $.fn.delete_question = function (questionId) {
-        let data = {questionId: questionId};
-        $.ajax({
-            url: `/professor/delete-question/${questionId}/${quizId_glob}`,
-            type: "DELETE",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-        }).done(function (response) {
-            $("#message_text").html("Delete question was successful!!!")
-            display_on_off("#messages", "flex");
-            setTimeout($(this).successful_apply_score, 1500);
-        }).fail(function (errMsg) {
-            console.log(errMsg);
-        })
-
-    }
-
-    // click on add question button in edit quiz table
-    $.fn.chose_source = function () {
-        options = [];
-        display_on_off("#quiz-section", "flex");
-        $("#add_quiz_button").css("display", "none");
-        $("#question_source_button").css("display", "inline");
-    };
-
-    // click on add essays button after click on add quiz button
-    $.fn.add_essays = function () {
-        display_on_off("#add_essays", "inline");
-    };
-
-    // click on remove button in edit multiple choice question
-    $.fn.removeOption = function (item) {
-        $("#question_text_option_table_body tr").each(function () {
-            if ($(this).find(".td_multipleOption")[0].innerText === item) {
-                $(this).remove();
-            }
-        });
-
-        $("#multipleChoice_correct_answer option").each(function () {
-            if ($(this)[0].value === item) {
-                $(this).remove();
-            }
-        });
-    };
-
-    // click on add multipleChoice button after click on add quiz button
-    $.fn.add_multipleChoice = function () {
-        display_on_off("#add_multipleChoice", "inline");
-    };
-
-    // click on add multipleChoice option button
-    $.fn.add_text_of_option = function () {
-        $("#question_text").html($("#add_multipleChoice_question").val());
-
-        if ($("#text_of_option").val() !== "") {
-            $("#multipleChoice_correct_answer_label").css("display", "inline");
-            $("#multipleChoice_table").css("display", "inline");
-            $("#question_text_option_table_body:last-child").append(
-                `<tr>
-                    <td>${$("#question_text_option_table_body tr").length + 1}</td>
-                    <td style="width: 500px" class="td_multipleOption">
-                        ${$("#text_of_option").val()}               
-                    </td>
-                    <td><button type='button' onclick='$(this).removeOption(\"${$("#text_of_option").val()}\")'>remove</button></td>
-                </tr>`
-            );
-            $("#multipleChoice_correct_answer").append(
-                `<option value="${$("#question_text_option_table_body tr:last-child").find(".td_multipleOption").get()[0].innerText}">
-                    ${$("#question_text_option_table_body tr").length}
-                </option>`
-            );
-        }
-        $("#question_text_option_table_body tr").each(function () {
-            let $testTd = $(this).find(".td_multipleOption").get();
-            options.push($testTd[0].innerText);
-        })
-        $("#text_of_option").val("").css("display", "inline");
-    };
-
-    // after click on save in course edit page
-    $(document).on('submit', '#submit_quiz_change_info_data', function (event) {
+    // after click on save in quiz answer section
+    $(document).on('submit', '#submit_quiz_info_data', function (event) {
         event.preventDefault();
 
-        let data = [
-            {title: $("#quiz_edit_title").val()},
-            {description: $("#quiz_edit_description").val()},
-            {quizTime: $("#quiz_edit_time").val()},
-            {quizId: quizId_glob}
-        ];
-
-        $.ajax({
-            url: "/professor/update-quiz",
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(data)
-        }).done(function (response) {
-            $("#message_text").html("Edit Quiz was successful!!!")
-            display_on_off("#messages", "flex");
-            setTimeout($(this).quiz_back_function, 1500);
-        }).fail(function (errMsg) {
-            console.log(errMsg);
-        })
-    });
-
-    // after click on save in add essays
-    $(document).on('submit', '#add_essays_form', function (event) {
-        event.preventDefault();
-
-        let data = [
-            {title: $("#add_essays_title").val()},
-            {question: $("#add_essays_question").val()},
-            {score: $("#add_essays_score").val()},
-            {quizId: quizId_glob},
-            {essaysId: $("#essays_id").val()}
-        ];
-
-        $.ajax({
-            url: "/professor/add-essays",
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(data)
-        }).done(function (response) {
-            $("#message_text").html("add question was successful!!!")
-            display_on_off("#messages", "flex");
-            setTimeout($(this).add_essays_back_function, 1500);
-            clean_essays_form();
-        }).fail(function (errMsg) {
-            console.log(errMsg);
-        })
-    });
-
-    // after click on save in add multiple choice
-    $(document).on('submit', '#add_multipleChoice_form', function (event) {
-        event.preventDefault();
-        let options = [];
-
-        $("#question_text_option_table_body tr").each(function () {
-            options.push($(this).find(".td_multipleOption")[0].innerText);
-        });
-
-        let data = [
-            {title: $("#add_multipleChoice_title").val()},
-            {question: $("#add_multipleChoice_question").val()},
-            {score: $("#add_multipleChoice_score").val()},
-            {quizId: quizId_glob},
-            {option: options},
-            {correctAnswer: $("#multipleChoice_correct_answer").val()},
-            {multipleChoiceId: $("#multipleChoice_id").val()}
-        ];
-
-        $.ajax({
-            url: "/professor/add-multipleOption",
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(data)
-        }).done(function (response) {
-            $("#message_text").html("add question was successful!!!")
-            display_on_off("#messages", "flex");
-            setTimeout($(this).add_essays_back_function, 1500);
-            clean_multipleChoice_form();
-        }).fail(function (errMsg) {
-            console.log(errMsg);
-        })
+        for (let i = 0; i < $answers.length; i++) {
+            if (!$answers[i].hasOwnProperty("answer")) {
+                $answers[i].answer = "";
+            }
+        }
+        $(this).end_of_quiz();
     });
 
     // after click on submit in add professor image
@@ -771,27 +401,6 @@ $(document).ready(function () {
             console.log(errMsg);
         })
     });
-
-    // clean multiple choice question form
-    function clean_multipleChoice_form() {
-        $("#add_multipleChoice_title").val("");
-        $("#add_multipleChoice_score").val("");
-        $("#add_multipleChoice_question").val("");
-        $("#question_text_option_table_body tr").remove();
-        $("#question_text").val("");
-        $("#multipleChoice_correct_answer").find("option").remove();
-        $("#multipleChoice_table").css("display", "none");
-        $("#text_of_option").css("display", "none");
-        $("#multipleChoice_correct_answer_label").css("display", "none");
-    }
-
-    // clean essays question form
-    function clean_essays_form() {
-        $("#add_essays_title").val("");
-        $("#add_essays_score").val("");
-        $("#add_essays_question").val("");
-        $("#essays_id").val("");
-    }
 
     // change display view
     function display_on_off(divId, displayType) {
