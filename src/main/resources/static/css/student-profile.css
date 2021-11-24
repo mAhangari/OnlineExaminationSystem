@@ -638,3 +638,8 @@ button:hover {
 }
 
 /* end of timer section design */
+
+/* add 300px right margin */
+.margin-right-300px {
+    margin-right: 300px;
+}
