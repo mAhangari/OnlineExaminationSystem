@@ -13,4 +13,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     @EntityGraph(attributePaths = "answer", type = EntityGraph.EntityGraphType.LOAD)
     Optional<Answer> findByStudent_Username(String username);
 
+    @EntityGraph(attributePaths = "answer", type = EntityGraph.EntityGraphType.LOAD)
+    Optional<Answer> findByStudent_UsernameAndQuestionSheet_Quiz_Id(String username, Long quizId);
+
 }
