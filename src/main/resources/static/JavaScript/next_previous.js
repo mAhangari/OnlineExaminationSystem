@@ -4,6 +4,7 @@ $(document).ready(function () {
     $rowPerPage = 5;
     $start = 0;
     $end = $rowPerPage;
+    let counter = 0;
 
     let circle_id = 0;
     // click on next button
@@ -177,6 +178,104 @@ $(document).ready(function () {
             $("#previousAndNextButton").html(tr);
             $("#circle_id_0").css("backgroundColor", "gray");
         }
+    }
+
+    // function for iterate questions
+    $.fn.iteration_input = function (input_list, tr) {
+        tr.length = 0;
+        $answers.length = 0;
+
+        $.each(input_list, function (i, item) {
+
+            let $tr_new;
+            let tr_new = [];
+            let data = {};
+
+            if (!item.hasOwnProperty("options")) {
+                $answers.push({questionId: item.id});
+                data.question = $('<tr>').append(
+                    $('<td>').text("Q:"),
+                    $('<td>').text(item.question)
+                );
+
+                data.context = $('<tr>').append(
+                    $('<td>').text(""),
+                    $('<td>').append(`
+                        <textarea cols="70" id="question_context_${item.id}" name="question_context" rows="5"></textarea>
+                    `)
+                );
+                tr.push(data);
+            } else {
+                $answers.push({questionId: item.id});
+                data.question = $(`<tr id="question_option_${item.id}" style="width: 100%">`).append(
+                    $('<td>').text("Q:"),
+                    $('<td>').text(item.question)
+                );
+                $.each(item.options, function (i, items) {
+                    $tr_new = $(`<tr>`).append(
+                        $('<td>').append(`
+                            <label class="container">
+                            <input name="checkmarkInput" type="radio">
+                            <span class="checkmark"></span>
+                            </label>
+                        `),
+                        $('<td>').html(i + 1 + ":&nbsp&nbsp&nbsp" + items)
+                    )
+                    tr_new.push($tr_new[0]);
+                });
+                data.option = tr_new;
+                tr.push(data);
+            }
+        });
+        $response_glob = tr;
+        $(this).create_questions();
+    }
+
+    $.fn.create_questions = function () {
+        counter = 1;
+        $(this).previous_question();
+    }
+
+    $.fn.make_question_table = function (data) {
+        let tr = [];
+        if (data.hasOwnProperty("option")) {
+            tr.push(data.question[0]);
+            tr.push("<tr><td></td><td><hr></td></tr>");
+            for (let i = 0; i < data.option.length; i++) {
+                tr.push(data.option[i])
+            }
+            $("#questions_table_body").html(tr);
+        } else {
+            tr.push(data.question[0]);
+            tr.push("<tr><td></td><td><hr></td></tr>");
+            tr.push(data.context[0]);
+
+            $("#questions_table_body").html(tr);
+        }
+    }
+
+    // go to next question
+    $.fn.next_question = function () {
+        if (counter < ($response_glob.length - 1)) {
+            $(this).create_answer();
+            counter++;
+            $(this).make_question_table($response_glob[counter]);
+        } else if (counter === ($response_glob.length - 1)) {
+            $("#question_next_button").css("display", "none");
+            $("#question_save_button").css("display", "inline");
+            $(this).create_answer();
+        }
+    }
+
+    // go to previous question
+    $.fn.previous_question = function () {
+        if (counter > 0) {
+            $(this).create_answer();
+            counter--;
+            $(this).make_question_table($response_glob[counter]);
+        }
+        $("#question_next_button").css("display", "inline");
+        $("#question_save_button").css("display", "none");
     }
 
 });
