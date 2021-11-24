@@ -23,4 +23,6 @@ public interface StudentService extends UserService<Student> {
     void changeProfessorToStudent(List<Map<String, String>> user, Professor exProfessor);
 
     void addNewStudent(Map<String, String> user);
+
+    Long startQuiz(Long quizId);
 }

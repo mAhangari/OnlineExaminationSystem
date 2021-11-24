@@ -1,18 +1,22 @@
 package ir.maktab56.service.impl;
 
+import ir.maktab56.exception.OutOfTimeException;
+import ir.maktab56.exception.enumeration.ErrorCode;
+import ir.maktab56.model.Answer;
 import ir.maktab56.model.Professor;
 import ir.maktab56.model.Student;
 import ir.maktab56.model.enumeration.UserType;
 import ir.maktab56.repository.StudentRepository;
-import ir.maktab56.service.CourseService;
-import ir.maktab56.service.ProfessorService;
-import ir.maktab56.service.RoleService;
-import ir.maktab56.service.StudentService;
+import ir.maktab56.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +28,9 @@ public class StudentServiceImpl extends UserServiceImpl<Student> implements Stud
     private final RoleService roleService;
     private CourseService courseService;
     private ProfessorService professorService;
+    private AnswerService answerService;
+    private QuizService quizService;
+    private QuestionSheetService questionSheetService;
 
     public StudentServiceImpl(StudentRepository repository, RoleService roleService) {
         super(repository);
@@ -39,6 +46,21 @@ public class StudentServiceImpl extends UserServiceImpl<Student> implements Stud
     @Autowired
     public void setCourseService(CourseService courseService) {
         this.courseService = courseService;
+    }
+
+    @Autowired
+    public void setAnswerService(AnswerService answerService) {
+        this.answerService = answerService;
+    }
+
+    @Autowired
+    public void setQuizService(QuizService quizService) {
+        this.quizService = quizService;
+    }
+
+    @Autowired
+    public void setQuestionSheetService(QuestionSheetService questionSheetService) {
+        this.questionSheetService = questionSheetService;
     }
 
     // update student base on first name, last name, national code, student id and username
@@ -113,5 +135,30 @@ public class StudentServiceImpl extends UserServiceImpl<Student> implements Stud
         student.setRoles(roleService.findRoleByName("STUDENT").orElse(null));
         student.setActive(false);
         save(student);
+    }
+
+    // start quiz and set start answer time if null, to the student answer then return time left of exam
+    @Override
+    public Long startQuiz(Long quizId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Answer answer = answerService
+                .findByStudent_UsernameAndQuestionSheet_Quiz_Id(authentication.getName(), quizId)
+                .orElse(new Answer());
+        if (answer.getStudent() == null) {
+            answer.setStudent(findStudentByUsername(authentication.getName()).orElseThrow());
+            answer.setStartAnswerDateTime(LocalDateTime.now());
+            answer.setQuestionSheet(questionSheetService.findByQuiz_Id(quizId).orElseThrow());
+            answerService.save(answer);
+            return quizService.findById(quizId).orElseThrow().getQuizTime() * 60L;
+        } else {
+            if (answer.getEndAnswerDateTime() != null)
+                throw new OutOfTimeException("Exam finished!!!", ErrorCode.PROCESS_OUT_OF_TIME);
+
+            long leftTime = quizService.findById(quizId).orElseThrow().getQuizTime() * 60L -
+                    Duration.between(answer.getStartAnswerDateTime(), LocalDateTime.now()).getSeconds();
+            if (leftTime > 3)
+                return leftTime;
+            else throw new OutOfTimeException("Exam Time finished!!!", ErrorCode.PROCESS_OUT_OF_TIME);
+        }
     }
 }
