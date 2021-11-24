@@ -181,9 +181,12 @@ $(document).ready(function () {
     }
 
     // function for iterate questions
-    $.fn.iteration_input = function (input_list, tr) {
-        tr.length = 0;
-        $answers.length = 0;
+    $.fn.iteration_input = function (input_list, tr, $answers) {
+
+        let isAnswer = true;
+        if ($answers.length === 0) {
+            isAnswer = false;
+        }
 
         $.each(input_list, function (i, item) {
 
@@ -192,51 +195,85 @@ $(document).ready(function () {
             let data = {};
 
             if (!item.hasOwnProperty("options")) {
-                $answers.push({questionId: item.id});
+
                 data.question = $('<tr>').append(
                     $('<td>').text("Q:"),
                     $('<td>').text(item.question)
                 );
 
+                let answer_val = "";
+                if (isAnswer) {
+
+                    for (let index = 0; index < $answers.length; index++) {
+                        if ($answers[index].questionId === item.id && $answers[index].answer) {
+                            answer_val = $answers[index].answer;
+                        }
+                    }
+                } else $answers.push({questionId: item.id});
+
                 data.context = $('<tr>').append(
                     $('<td>').text(""),
                     $('<td>').append(`
-                        <textarea cols="70" id="question_context_${item.id}" name="question_context" rows="5"></textarea>
-                    `)
+                <textarea cols="70" id="question_context_${item.id}" name="question_context" rows="5">${answer_val}</textarea>`)
                 );
                 tr.push(data);
             } else {
-                $answers.push({questionId: item.id});
+                let answer_val = "";
+                if (isAnswer) {
+                    for (let index = 0; index < $answers.length; index++) {
+                        if ($answers[index].questionId === item.id) {
+                            answer_val = $answers[index].answer;
+                        }
+                    }
+                } else $answers.push({questionId: item.id});
+
                 data.question = $(`<tr id="question_option_${item.id}" style="width: 100%">`).append(
                     $('<td>').text("Q:"),
                     $('<td>').text(item.question)
                 );
+
                 $.each(item.options, function (i, items) {
-                    $tr_new = $(`<tr>`).append(
-                        $('<td>').append(`
+                    if (items === answer_val) {
+                        $tr_new = $(`<tr>`).append(
+                            $('<td>').append(`
+                            <label class="container">
+                            <input name="checkmarkInput" type="radio" checked>
+                            <span class="checkmark"></span>
+                            </label> 
+                        `),
+                            $('<td>').html(i + 1 + ":&nbsp&nbsp&nbsp" + items)
+                        )
+                    } else {
+                        $tr_new = $(`<tr>`).append(
+                            $('<td>').append(`
                             <label class="container">
                             <input name="checkmarkInput" type="radio">
                             <span class="checkmark"></span>
-                            </label>
+                            </label> 
                         `),
-                        $('<td>').html(i + 1 + ":&nbsp&nbsp&nbsp" + items)
-                    )
+                            $('<td>').html(i + 1 + ":&nbsp&nbsp&nbsp" + items)
+                        )
+                    }
                     tr_new.push($tr_new[0]);
                 });
                 data.option = tr_new;
                 tr.push(data);
             }
         });
+
         $response_glob = tr;
         $(this).create_questions();
     }
 
+    // create question of quiz per page
     $.fn.create_questions = function () {
         counter = 1;
         $(this).previous_question();
     }
 
+    // insert question table element
     $.fn.make_question_table = function (data) {
+        console.log(data);
         let tr = [];
         if (data.hasOwnProperty("option")) {
             tr.push(data.question[0]);

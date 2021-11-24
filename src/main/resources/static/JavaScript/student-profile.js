@@ -4,7 +4,7 @@ $(document).ready(function () {
     let courseId_glob;
     let clear_time_glob;
     let tr = [];
-    $answers = [];
+    let $answers = [];
 
     $(".sidebar").after("<hr style='border-color: rgba(245,245,245,0.27)'>");
     $("#profile").after("<hr style='border-color: rgba(245,245,245,0.27)'>").css("textAlign", "center");
@@ -249,7 +249,6 @@ $(document).ready(function () {
         let answers = [{quizId: quizId_glob}];
 
         for (let index = 0; index < $answers.length; index++) {
-            console.log($answers[index]);
             answers.push($answers[index]);
         }
 
@@ -273,8 +272,9 @@ $(document).ready(function () {
     // create question table
     $.fn.createQuestions = function (question_list) {
         $("#question_sheet_table").css("display", "block");
-        $(this).iteration_input(question_list, tr);
-        $(this).create_answer();
+        $(this).get_answers();
+        $(this).iteration_input(question_list, tr, $answers);
+        // $(this).create_answer();
     };
 
     $.fn.create_answer = function () {
@@ -297,7 +297,33 @@ $(document).ready(function () {
                     $answers[i].answer = answer_val;
                 }
             }
-        })
+        });
+        $(this).save_student_answers();
+    }
+
+    // save student answers to local storage
+    $.fn.save_student_answers = function () {
+        let $data = [];
+        $data.push({answers: $answers});
+        localStorage.setItem(`answers${quizId_glob}`, JSON.stringify($data));
+    }
+
+    // get local storage student answers if exists
+    $.fn.get_answers = function () {
+        if (localStorage.getItem(`answers${quizId_glob}`)) {
+            $answers = JSON.parse(localStorage.getItem(`answers${quizId_glob}`))[0];
+            if (($answers.hasOwnProperty("answers") && Object.keys($answers.answers).length !== 0)) {
+                $answers = $answers.answers;
+            } else {
+                $answers = [];
+            }
+
+            tr.length = 0;
+
+        } else {
+            tr.length = 0;
+            $answers.length = 0;
+        }
     }
 
     // timer function
@@ -312,6 +338,7 @@ $(document).ready(function () {
             $('.timer').text($(this).get_elapsed_time_string(minutes));
             if (minutes === 0) {
                 clearInterval(clear_time);
+                jQuery("#question_save_button").click();
                 $(this).end_of_quiz();
             }
         }, 1000);
@@ -351,6 +378,7 @@ $(document).ready(function () {
     // after click on save in quiz answer section
     $(document).on('submit', '#submit_quiz_info_data', function (event) {
         event.preventDefault();
+        localStorage.removeItem(`answers${quizId_glob}`);
 
         for (let i = 0; i < $answers.length; i++) {
             if (!$answers[i].hasOwnProperty("answer")) {
