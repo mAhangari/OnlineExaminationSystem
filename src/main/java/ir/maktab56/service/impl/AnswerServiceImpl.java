@@ -5,6 +5,7 @@ import ir.maktab56.model.*;
 import ir.maktab56.repository.AnswerRepository;
 import ir.maktab56.service.AnswerService;
 import ir.maktab56.service.QuestionService;
+import ir.maktab56.service.QuestionSheetService;
 import ir.maktab56.service.dto.AnswerDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepository repository;
     private AnswerMapper answerMapper;
     private QuestionService questionService;
+    private QuestionSheetService questionSheetService;
 
     @Autowired
     public void setAnswerMapper(AnswerMapper answerMapper) {
@@ -33,9 +35,19 @@ public class AnswerServiceImpl implements AnswerService {
         this.questionService = questionService;
     }
 
+    @Autowired
+    public void setQuestionSheetService(QuestionSheetService questionSheetService) {
+        this.questionSheetService = questionSheetService;
+    }
+
     @Override
     public Answer save(Answer answer) {
         return repository.save(answer);
+    }
+
+    @Override
+    public Optional<Answer> findById(Long id) {
+        return repository.findById(id);
     }
 
     @Override
@@ -47,6 +59,11 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public Optional<Answer> findByStudent_UsernameAndQuestionSheet_Quiz_Id(String username, Long quizId) {
         return repository.findByStudent_UsernameAndQuestionSheet_Quiz_Id(username, quizId);
+    }
+
+    @Override
+    public Optional<List<Answer>> findByQuestionSheet(QuestionSheet questionSheet) {
+        return repository.findByQuestionSheet(questionSheet);
     }
 
     // set answer base on receive answer from student
@@ -64,6 +81,12 @@ public class AnswerServiceImpl implements AnswerService {
             save(answer1);
         }
         return answerMapper.convertEntityToDTO(answer1);
+    }
+
+    @Override
+    public List<Answer> findParticipatingAnswers(Long quizId) {
+        QuestionSheet questionSheet = questionSheetService.findByQuiz_Id(quizId).orElseThrow();
+        return findByQuestionSheet(questionSheet).orElseThrow();
     }
 
     // map input answer to (Question, String) and then return
