@@ -26,7 +26,7 @@ $(document).ready(function () {
     // click on fa-user-edit
     $("#fa-user-edit-click").click(function () {
         $("#professor-image").css('display', 'none');
-        $("#add-professor-image").css('display', 'flex');
+        $("#add-student-image").css('display', 'flex');
     });
 
     // click on Courses
