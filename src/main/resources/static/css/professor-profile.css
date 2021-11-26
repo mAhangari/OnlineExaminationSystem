@@ -27,20 +27,6 @@
 	font-size: 18px;
 }
 
-/* button of dashboard */
-.dashboard button {
-	border: none;
-	outline: 0;
-	display: inline-block;
-	padding: 8px;
-	color: white;
-	background-color: #000;
-	text-align: center;
-	cursor: pointer;
-	width: 100%;
-	font-size: 18px;
-}
-
 /* a link of dashboard */
 .dashboard a {
 	text-decoration: none;
@@ -154,26 +140,6 @@ button:hover {
 	cursor: pointer;
 }
 
-/* tooltip modification */
-.tooltip {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	visibility: hidden;
-	text-align: center;
-	font-family: 'Times New Roman', Times, serif;
-	font-size: 14px;
-	font-weight: 450;
-	border-radius: 6px;
-	padding: 5px 6px;
-	position: absolute;
-	width: 100px;
-	height: 100px;
-	top: 34px;
-	right: 8px;
-}
-
 .tooltip a {
 	padding: 5px;
 	text-decoration: none;
@@ -275,20 +241,6 @@ button:hover {
 	cursor: pointer;
 }
 
-/* The container */
-.container {
-	display: flex;
-	position: relative;
-	justify-content: center;
-	align-items: center;
-	cursor: pointer;
-	font-size: 22px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
 /* Hide the browser's default checkbox */
 .container input {
 	opacity: 0;
@@ -386,7 +338,7 @@ button:hover {
 	display: none;
 }
 
-/* create circle in buttom of page to count page */
+/* create circle in button of page to count page */
 .circle {
 	border: 1px solid #9099b7;
 	background-color: white;
@@ -395,7 +347,7 @@ button:hover {
 	border-radius: 50%;
 }
 
-/* create middle circle in buttom of page to count page */
+/* create middle circle in button of page to count page */
 .middle_circle {
 	border: 1px solid #9099b7;
 	background-color: white;
@@ -404,8 +356,8 @@ button:hover {
 	border-radius: 50%;
 }
 
-/* create litle circle in buttom of page to count page more than 5 */
-.litle_circle {
+/* create little circle in button of page to count page more than 5 */
+.little_circle {
 	border: 1px solid #9099b7;
 	background-color: white;
 	height: 5px;
@@ -452,22 +404,30 @@ button:hover {
 
 /* add 30px margin top on element */
 .margin-top-30px {
-    margin-top: 30px;
+	margin-top: 30px;
 }
 
-#course_table, #course_table_quiz_information, #quiz_information_table {
-    padding-top: 30px;
-    height: 300px;
-    width: 500px;
-    overflow-y: auto;
+#course_table, #course_table_quiz_information {
+	padding-top: 30px;
+	height: 300px;
+	width: 500px;
+	overflow-y: auto;
+}
+
+/* quiz information table size */
+#quiz_information_table {
+	padding-top: 30px;
+	height: 300px;
+	width: 650px;
+	overflow-y: auto;
 }
 
 /* question bank table handle overflow */
 #question_bank {
-    padding-top: 30px;
-    height: 220px;
-    width: 590px;
-    overflow-y: auto;
+	padding-top: 30px;
+	height: 220px;
+	width: 590px;
+	overflow-y: auto;
 }
 
 /* questions table handle overflow */
@@ -524,21 +484,6 @@ button:hover {
 	align-items: center;
 }
 
-/* style message text */
-#message_text {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background-color: blanchedalmond;
-	color: chocolate;
-	width: 500px;
-	height: 100px;
-	font-family: 'Times New Roman';
-	font-weight: bold;
-	font-size: 30px;
-	border-radius: 10px;
-}
-
 /* course info design button */
 #edit_info_button {
     background-color: #9099b7;
@@ -551,22 +496,32 @@ button:hover {
 
 /* quiz button for question sheet design button */
 #question_sheet_button {
-    background-color: #9099b7;
-    height: 20px;
-    width: 100px;
-    border: none;
-    color: white;
-    border-radius: 5px;
+	background-color: #9099b7;
+	height: 20px;
+	width: 100px;
+	border: none;
+	color: white;
+	border-radius: 5px;
+}
+
+/* quiz button for participants information */
+#examiners_information {
+	background-color: #9099b7;
+	height: 20px;
+	width: 75px;
+	border: none;
+	color: white;
+	border-radius: 5px;
 }
 
 /* quiz design delete button */
 #delete_info_button {
-    background-color: #E64C65;
-    height: 20px;
-    width: 50px;
-    border: none;
-    color: white;
-    border-radius: 10px;
+	background-color: #E64C65;
+	height: 20px;
+	width: 50px;
+	border: none;
+	color: white;
+	border-radius: 10px;
 }
 
 /* decorate input of create quiz section */

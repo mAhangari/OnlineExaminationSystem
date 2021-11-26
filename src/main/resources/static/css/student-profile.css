@@ -1,0 +1,645 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.main-container {
+    display: flex;
+}
+
+.left-container {
+    /* border: 0 solid salmon; */
+    width: 20vw;
+}
+
+/* profile card in dashboard */
+.dashboard .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family: arial, serif;
+}
+
+/* title of dashboard card */
+.dashboard .title {
+    color: grey;
+    font-size: 18px;
+}
+
+/* a link of dashboard */
+.dashboard a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+}
+
+/* button and a link hover of dashboard */
+.dashboard button:hover, a:hover {
+    opacity: 0.7;
+}
+
+/* modify dashboard tab */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    height: 100vh;
+}
+
+/* dashboard tab left container */
+.dashboard-left-container {
+    padding: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* right container */
+.right-container {
+    background-color: rgb(241, 240, 240);
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+}
+
+/* design right container header */
+.right-container-header {
+    background-color: ghostwhite;
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.admin {
+    margin: 5px;
+    color: gray;
+}
+
+/* side bar modification */
+.sidebar {
+    border: 0 none white;
+    height: 40px;
+    width: 100%;
+}
+
+/* remove unordered list style type */
+ul {
+    /* text-decoration: none; */
+    list-style-type: none;
+}
+
+/* select background color for all button */
+button {
+    background-color: white;
+}
+
+/* design button hover for all buttons */
+button:hover {
+    /*background-color: gainsboro;*/
+    opacity: 70%;
+    color: rgb(78, 116, 219);
+    cursor: pointer;
+}
+
+/* profile display and position */
+#profile {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* profile picture display modification */
+.profile-picture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+
+/* profile picture positioning */
+.picture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    border: 1px solid rgb(179, 92, 92);
+    width: 25px;
+    height: 25px;
+}
+
+.picture:hover .tooltip, .picture:hover {
+    visibility: visible;
+    background-color: white;
+    cursor: pointer;
+}
+
+.tooltip a {
+    padding: 5px;
+    text-decoration: none;
+    color: rgb(214, 194, 158);
+}
+
+.tooltip button {
+    padding: 5px;
+    color: rgb(214, 194, 158);
+    border: 0 none;
+}
+
+/* modify users and all_users tab */
+.courses, .all_users {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    height: 100vh;
+}
+
+/* users tab top container */
+.course-up-container {
+    padding-top: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* modify accept and reject button */
+.accept-reject {
+    padding-top: 20px;
+}
+
+.course-up-container table, tr, td, th {
+    border-collapse: collapse;
+    border: 1px solid rgb(187, 179, 168);
+    padding: 5px;
+    text-align: center;
+}
+
+.course-up-container tr:nth-child(even) {
+    background-color: #dadada;
+}
+
+.course-up-container th {
+    background-color: burlywood;
+}
+
+/* accept button design */
+#accept, #add_course_button {
+    background-color: rgba(16, 216, 139, 0.76);
+    border: 0;
+    border-radius: 5px;
+    height: 30px;
+    width: 60px;
+    color: rgb(143, 143, 143);
+}
+
+/* reject button design */
+#reject {
+    background-color: rgb(224, 101, 101);
+    margin-left: 15px;
+    border: 0;
+    border-radius: 5px;
+    height: 30px;
+    width: 60px;
+    color: rgb(218, 216, 216);
+}
+
+/* decrease opacity of accept and reject button hover */
+#accept:hover, #reject:hover {
+    opacity: 70%;
+}
+
+/* positioning select-all column */
+.select-all {
+    display: flex;
+    align-items: center;
+}
+
+/* hide input of select-all column */
+.select-all input {
+    opacity: 0;
+}
+
+.select-all span {
+    background-color: whitesmoke;
+    margin: 3px 0 0 5px;
+    height: 15px;
+    width: 15px;
+}
+
+/* create custom hover for select-all button */
+.select-all span:hover, input:hover {
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    height: 20px;
+    width: 20px;
+    background-color: white;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+    margin: 2px 0 0 6px;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* users tab down container */
+.course-down-container {
+    padding: 40px 0 60px;
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+/* update user information table header */
+.user_information_table th {
+    color: white;
+    font-size: 20px;
+}
+
+/* user information table data left size */
+.left_td_size {
+    width: 250px;
+}
+
+/* user information table data right size */
+.right_td_size {
+    width: 400px;
+}
+
+/* border customizing for button in user_information_table class */
+.user_information_table button {
+    border: 0 solid white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    color: black;
+}
+
+/* user info table button hover reduce opacity */
+.user_information_table button:hover {
+    opacity: 60%;
+}
+
+/* user info table save button decoration and color */
+.user_information_table button#user_info_button_save {
+    display: none;
+    background-color: #0f958a;
+}
+
+/* default display for users, course and  all_users tab */
+.courses, .all_users, .course, .user_information_table, #quiz-section {
+    display: none;
+}
+
+/* create circle in button of page to count page */
+.circle {
+    border: 1px solid #9099b7;
+    background-color: white;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+}
+
+/* create middle circle in button of page to count page */
+.middle_circle {
+    border: 1px solid #9099b7;
+    background-color: white;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+}
+
+/* create little circle in button of page to count page more than 5 */
+.little_circle {
+    border: 1px solid #9099b7;
+    background-color: white;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+}
+
+/* hover of circle */
+.circle:hover {
+    cursor: pointer;
+    background-color: #9099b7;
+}
+
+.green_button {
+    background-color: #0f8a95;
+}
+
+.red_button {
+    background-color: #E64C65;
+}
+
+/* define gray color for call in class attribute */
+.gray_button {
+    background-color: #9099b7;
+}
+
+/* move element of tage into center */
+.centralized_element {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* change display to none on element */
+.display_none {
+    display: none;
+}
+
+/* add 50px margin top on element */
+.margin-top-50px {
+    margin-top: 50px;
+}
+
+/* add 30px margin top on element */
+.margin-top-30px {
+    margin-top: 30px;
+}
+
+#course_table, #course_table_quiz_information, #quiz_information_table {
+    padding-top: 30px;
+    height: 300px;
+    width: 500px;
+    overflow-y: auto;
+}
+
+/* question bank table handle overflow */
+#question_bank {
+    padding-top: 30px;
+    height: 220px;
+    width: 590px;
+    overflow-y: auto;
+}
+
+/* questions table handle overflow */
+#questions_table {
+    padding-top: 30px;
+    height: 500px;
+    width: 590px;
+    overflow-y: auto;
+}
+
+/* change padding of button in course table quiz information to zero */
+#course_table_quiz_information button, #quiz_information_table button {
+    padding: 0;
+}
+
+/* change background of add question form */
+.add-question-div {
+    padding: 20px;
+    background-color: rgba(144, 153, 183, 0.78);
+    border-radius: 5px;
+}
+
+/* change shape of add multiple choice option button */
+#add_multipleChoice_option {
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+}
+
+/* change direction of course */
+.course {
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+}
+
+/* design previous and next button */
+.previousAndNextButton {
+    background-color: rgba(184, 134, 11, 0.65);
+    margin: 10px;
+    border: 0;
+    border-radius: 5px;
+    height: 30px;
+    width: 80px;
+    color: rgb(255, 255, 255);
+}
+
+/* style message body */
+#messages {
+    margin-top: 50px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+/* course info design button */
+#edit_info_button {
+    background-color: #9099b7;
+    height: 20px;
+    width: 35px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+}
+
+/* quiz button for question sheet design button */
+#question_sheet_button {
+    background-color: #9099b7;
+    height: 20px;
+    width: 100px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+}
+
+/* quiz design delete button */
+#delete_info_button {
+    background-color: #E64C65;
+    height: 20px;
+    width: 50px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+}
+
+/* decorate input of create quiz section */
+#create_quiz input[type=text], #create_quiz input[type=number] {
+    margin: 5px;
+    height: 30px;
+    width: 200px;
+    text-align: center;
+    border: 2px none white;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+/* background of create quiz page */
+#create_quiz_id {
+    background-color: rgba(189, 220, 220, 0.94);
+    height: 300px;
+    width: 300px;
+    border: 2px solid #ecf0f1;
+    border-radius: 10px;
+}
+
+/* define 100vh height */
+.height_100vh {
+    height: 100vh;
+}
+
+/* modify format of quiz option table, tr, td, th */
+.quiz_option_table table, .quiz_option_table tr,
+.quiz_option_table td, .quiz_option_table th {
+    background-color: gainsboro;
+    border: none;
+    padding: 5px;
+    text-align: left;
+}
+
+/* modify format of quiz option table border */
+.quiz_option_table table {
+    border: 1px solid rgb(187, 179, 168);
+}
+
+/* change hover of fa-user-edit */
+.fa-user-edit:hover {
+    color: #0f958a;
+    cursor: pointer;
+}
+
+/* change fa-user-edit view  */
+.fa-user-edit {
+    color: #cccccc;
+    cursor: pointer;
+}
+
+/* start of timer section design */
+.timer {
+    font: normal 13px/20px Arial, Helvetica, sans-serif;
+    word-wrap: break-word;
+    background: #fff;
+    /*padding-top: 100px;*/
+    margin-bottom: 50px
+}
+
+.timer .countdown-label {
+    font: lighter 15px Arial, sans-serif;
+    color: #65584c;
+    text-align: center;
+    text-transform: uppercase;
+    display: inline-block;
+    letter-spacing: 2px;
+    margin-top: 9px
+}
+
+.timer #countdown {
+    box-shadow: 0 1px 2px 0 rgba(1, 1, 1, 0.4);
+    width: 240px;
+    height: 96px;
+    text-align: center;
+    background: #f1f1f1;
+    border-radius: 5px;
+    margin: auto;
+}
+
+.timer #countdown #tiles {
+    color: #fff;
+    position: relative;
+    z-index: 1;
+    text-shadow: 1px 1px 0 #ccc;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    border-radius: 5px 5px 0 0;
+    font-size: 48px;
+    font-weight: lighter;
+    display: block;
+}
+
+.timer .color-full {
+    background: #53bb74;
+}
+
+.timer .color-half {
+    background: #ebc85d;
+}
+
+.timer .color-empty {
+    background: #e5554e;
+}
+
+.timer #countdown #tiles > span {
+    width: 70px;
+    max-width: 70px;
+    padding: 18px 0;
+    position: relative;
+}
+
+.timer #countdown .labels {
+    width: 100%;
+    height: 25px;
+    text-align: center;
+    position: absolute;
+    bottom: 8px;
+}
+
+.timer #countdown .labels li {
+    width: 102px;
+    font: bold 15px 'Droid Sans', Arial, sans-serif;
+    color: #f47321;
+    text-shadow: 1px 1px 0 #000;
+    text-align: center;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+/* end of timer section design */
+
+/* add 300px right margin */
+.margin-right-300px {
+    margin-right: 300px;
+}

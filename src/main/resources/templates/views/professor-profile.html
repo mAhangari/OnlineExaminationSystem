@@ -6,6 +6,7 @@
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>Profile</title>
   <link rel="stylesheet" href="/css/professor-profile.css">
+  <link href="/css/common.css" rel="stylesheet">
   <script src="https://kit.fontawesome.com/0f0e261005.js" crossorigin="anonymous"></script>
   <script src="/JavaScript/jquery-3.6.0.min.js"></script>
   <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
@@ -129,6 +130,7 @@
               <th>Description</th>
               <th>Time</th>
               <th>Question Sheet</th>
+              <th>Examiners</th>
             </thead>
             <tbody id="quiz_info_tbody"></tbody>
           </table>
@@ -136,12 +138,30 @@
     </div>
     <!-- end of right container quizzes button -->
 
+    <!-- start of quiz participants -->
+    <div class="course-up-container display_none" id="participants_table">
+      <span class="" id="quiz_participants_table">
+          <table>
+            <thead>
+              <th>Num</th>
+              <th>Full Name</th>
+              <th>Score</th>
+              <th>Answer</th>
+            </thead>
+            <tbody id="quiz_participants_info_tbody"></tbody>
+          </table>
+      </span>
+    </div>
+    <!-- end of quiz participants -->
+
     <!-- start of right container question sheet table -->
     <div class="user_information_table course-up-container display_none" id="question_sheet_table">
       <span class="margin-top-30px quiz_option_table" id="questions_table">
-        <table style="width: 100%">
-          <tbody id="questions_table_body"></tbody>
-        </table>
+        <form action="" id="question_sheet_submit" method="post">
+          <table style="width: 100%">
+            <tbody id="questions_table_body"></tbody>
+          </table>
+        </form>
       </span>
     </div>
     <!-- end of right container question sheet table -->
@@ -237,7 +257,6 @@
       </form>
     </div>
     <!-- end of edit quiz table information -->
-
 
     <!-- start of add essays form -->
     <div class="user_information_table course-up-container" id="add_essays">

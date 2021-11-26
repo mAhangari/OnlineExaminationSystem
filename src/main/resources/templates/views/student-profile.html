@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Profile</title>
+    <link href="/css/student-profile.css" rel="stylesheet">
+    <link href="/css/common.css" rel="stylesheet">
+    <script crossorigin="anonymous" src="https://kit.fontawesome.com/0f0e261005.js"></script>
+    <script src="/JavaScript/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+    <script src="/JavaScript/student-profile.js"></script>
+    <script src="/JavaScript/next_previous.js"></script>
+</head>
+<body>
+<div class="main-container">
+
+    <!-- LEFT-CONTAINER -->
+    <div class="left-container">
+        <div class="">
+            <!-- MENU BOX (LEFT-CONTAINER) -->
+            <ul class="">
+                <li id="profile">
+                    <span>Profile</span>
+                </li>
+                <li>
+                    <button class="sidebar" id="dashboard">Dashboard</button>
+                </li>
+                <li>
+                    <button class="sidebar" id="all_course">Courses</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- RIGHT-CONTAINER -->
+    <div class="right-container">
+        <!-- HEADER -->
+        <header class="right-container-header">
+            <ul class="">
+                <li>
+            <span class="profile-picture">
+              <span class="picture">
+                <i class="fas fa-user fa-1x" style="color: rgb(177, 177, 177);"></i>
+                <span class="tooltip">
+                  <a href="#">option</a>
+                  <a href="#">option</a>
+                  <a href="#">Settings</a>
+                  <form action="/logout" method="POST">
+                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                    <button name="submit_param" type="submit" value="submit_value">logout</button>
+                  </form>
+                </span>
+              </span>
+              <span class="admin">Professor</span>
+            </span>
+                </li>
+            </ul>
+        </header>
+
+        <div id="messages">
+            <p id="message_text"></p>
+        </div>
+
+        <!-- start of right container dashboard button -->
+        <div class="dashboard">
+            <div class="dashboard-left-container">
+                <div class="card">
+          <span>
+            <img alt="professor picture" id="professor-image" src="" style="width:100%">
+            <form class="display_none" enctype="multipart/form-data" id="add-student-image"
+                  style="margin: 20px; justify-content: center; align-items: center">
+              <input accept="image/png, image/jpeg" name="image" type="file">
+              <input type="submit"/>
+            </form>
+          </span>
+
+                    <span><i class="fas fa-user-edit" id="fa-user-edit-click" style="float: right"></i></span>
+                    <h1>Professor Name</h1>
+                    <p class="title">CEO & Founder, Example</p>
+                    <p>Harvard University</p>
+                    <div style="margin: 24px 0;">
+                        <a href="#"><i class="fa fa-dribbble"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-linkedin"></i></a>
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                    </div>
+                    <p>
+                        <button>Contact</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- end of right container dashboard button -->
+
+        <!-- start of right container courses button -->
+        <div class="courses">
+            <div class="course-up-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Num</th>
+                        <th>Title</th>
+                        <th>Course Id</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Professor</th>
+                        <th>Info</th>
+                    </tr>
+                    </thead>
+                    <tbody id="records_table_body_student_course">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="course-down-container" id="previousAndNextButton"></div>
+        </div>
+        <!-- end of right container courses button -->
+
+        <!-- start of right container quizzes button -->
+        <div class="user_information_table course-up-container display_none" id="quiz_table">
+      <span class="" id="quiz_information_table">
+          <table>
+            <thead>
+              <th>Num</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Time</th>
+              <th>Question Sheet</th>
+            </thead>
+            <tbody id="quiz_info_tbody"></tbody>
+          </table>
+      </span>
+        </div>
+        <!-- end of right container quizzes button -->
+
+        <!-- quiz information after click on info button in course table -->
+        <div class="user_information_table course-up-container display_none" id="course_table_quizInformation">
+        <span class="" id="course_table_quiz_information">
+            <table>
+              <thead>
+                <th>Num</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Time</th>
+                <th>Start</th>
+              </thead>
+              <tbody id="course_table_quiz_info"></tbody>
+            </table>
+        </span>
+            <span class="margin-top-50px">
+            <button class="red_button course_edit_button_cancel" onclick="$(this).quiz_back_function()" type="button">Back</button>
+            <button class="green_button course_edit_button_cancel" onclick="$(this).quiz_create_function()"
+                    type="button">Create</button>
+        </span>
+        </div>
+        <!-- end of quiz information table -->
+
+        <!-- start of quiz section -->
+        <div class="user_information_table course-up-container" id="quiz-section">
+            <div class="timer">
+                <div id="countdown">
+                    <div class="color-full" id='tiles'></div>
+                    <div class="countdown-label">Time Remaining</div>
+                </div>
+            </div>
+
+            <form class="centralized_element" id="submit_quiz_info_data">
+                <div class="user_information_table display_none" id="question_sheet_table">
+                    <span class="quiz_option_table" id="questions_table">
+                        <table style="width: 600px">
+                            <tbody id="questions_table_body"></tbody>
+                        </table>
+                    </span>
+                </div>
+
+                <span class="margin-top-30px">
+                    <button class="gray_button margin-right-300px" id="question_previous_button"
+                            onclick="$(this).previous_question()" type="button">Previous</button>
+                    <button class="gray_button" id="question_next_button" onclick="$(this).next_question()"
+                            type="button">next</button>
+                    <button class="green_button display_none" id="question_save_button" type="submit">Save</button>
+                </span>
+            </form>
+        </div>
+        <!-- end of edit section -->
+
+    </div> <!-- end right-container -->
+</div> <!-- end main-container -->
+</body>
+</html>

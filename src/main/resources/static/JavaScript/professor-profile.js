@@ -2,6 +2,9 @@ $(document).ready(function () {
 
     let quizId_glob;
     let courseId_glob;
+    let answerId_glob;
+    let total_score = 0;
+    let score_id_list = [];
 
 
     $(".sidebar").after("<hr style='border-color: rgba(245,245,245,0.27)'>");
@@ -42,10 +45,10 @@ $(document).ready(function () {
                     $('#message_text').html("There is no course!!!");
                 } else {
                     display_on_off(".courses", "flex");
-                    $response_glob = response;
+                    set_response_glob(response);
                     $(function () {
                         $(".courses tr:has(td)").remove();
-                        $(this).next_previous_button();
+                        $(this).next_previous_button("course");
                         table_data(response, "course");
                     });
                 }
@@ -55,6 +58,10 @@ $(document).ready(function () {
             }
         });
     });
+
+    function set_response_glob(response) {
+        $response_glob = response;
+    }
 
     // click on Quizzes
     $("#all_quizzes").click(function () {
@@ -69,7 +76,7 @@ $(document).ready(function () {
                 $('#message_text').html("There is no quiz!!!");
             } else {
                 display_on_off("#quiz_table", "flex");
-                $response_glob = response;
+                set_response_glob(response);
                 $(function () {
                     course_table_data(response, "all_quiz_info");
                 });
@@ -89,6 +96,8 @@ $(document).ready(function () {
         });
         if (section === "course")
             $("#records_table_body_professor_course").html(tr);
+        else if (section === "participants_info")
+            $("#quiz_participants_info_tbody").html(tr);
         else
             $("#records_table_body").html(tr);
     }
@@ -129,7 +138,18 @@ $(document).ready(function () {
                     $('<td>').text(item.quizTime),
                     $('<td>').append(
                         `<button id="question_sheet_button" type='button' onclick='$(this).question_sheet_information(\"${item.id}\")'>Question Sheet</button>`
+                    ),
+                    $('<td>').append(
+                        `<button id="examiners_information" type='button' onclick='$(this).get_participants(\"${item.id}\")'>Information</button>`
                     )
+                );
+            } else if (section === "participants_info") {
+                console.log(item.score);
+                $tr = $('<tr>').append(
+                    $('<td>').text(i + 1),
+                    $('<td>').text(`${item.student.firstName} ${item.student.lastName}`),
+                    $('<td>').text(`${item.score}`),
+                    $('<td>').append(`<button id="edit_info_button" type='button' onclick='$(this).answer_information(${JSON.stringify(item)})'>Info</button>`)
                 );
             } else {
                 $tr = $('<tr>').append(
@@ -174,6 +194,11 @@ $(document).ready(function () {
         $(this).question_sheet_information(quizId_glob);
     };
 
+    // after apply score to the answer
+    $.fn.successful_apply_score_toAnswer = function () {
+        $(this).get_participants(quizId_glob);
+    };
+
     // after click on question sheet in quizzes table
     $.fn.question_sheet_information = function (quizId) {
         quizId_glob = quizId;
@@ -190,6 +215,31 @@ $(document).ready(function () {
             } else {
                 display_on_off("#question_sheet_table", "flex");
                 createQuestions(response);
+            }
+
+        }).fail(function (errMsg) {
+            console.log(errMsg);
+        })
+    };
+
+    // after click on information button in quizzes table
+    $.fn.get_participants = function (quizId) {
+        quizId_glob = quizId;
+        $.ajax({
+            url: `/professor/get-participants/${quizId}`,
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+        }).done(function (response) {
+            if (response.length === 0) {
+                $("#message_text").html("There is no participants yet!!!");
+                display_on_off("#messages", "flex");
+                setTimeout($(this).question_sheet_back_function, 1500);
+            } else {
+                set_response_glob(response);
+                display_on_off("#participants_table", "flex");
+                $(this).next_previous_button("participants_info");
+                table_data(response, "participants_info");
             }
 
         }).fail(function (errMsg) {
@@ -214,11 +264,11 @@ $(document).ready(function () {
     };
 
     // function for change row per page
-    $.fn.page_data_change = function () {
+    $.fn.page_data_change = function (section) {
         let tr = [];
         $.each($response_glob, function (i, item) {
             if (i >= $start && i < $end) {
-                row_data_iteration(tr, i, item, "course");
+                row_data_iteration(tr, i, item, section);
             }
         });
         $("#records_table_body_all_course").html(tr);
@@ -268,6 +318,75 @@ $(document).ready(function () {
                 console.log(errMsg);
             }
         });
+    };
+
+    // click on info button in quiz details table and create table of question and answer for set score of each answer
+    $.fn.answer_information = function (answer_information) {
+
+        answerId_glob = answer_information.id;
+
+        display_on_off("#question_sheet_table", "flex");
+
+        total_score = 0;
+        let tr = [];
+        score_id_list = [];
+        let question_information = answer_information.questionSheet.questions;
+        $.each(question_information, function (i, item) {
+            let $tr;
+            let $tr_new;
+            let tr_new = [];
+            let score = "";
+            if (item.scores.length !== 0 && item.correctAnswer === answer_information.answer[`${item.id}`]) {
+                score = item.scores[0].score;
+                total_score += score;
+            } else {
+                score = 0;
+            }
+            if (!item.hasOwnProperty("options")) {
+                $tr = $('<tr>').append(
+                    $('<td>').html("<b style='color: #ed4956'>Q:</b>"),
+                    $('<td>').text(item.question),
+                    $('<td style="width: 60px">').append(
+                        `<input style="width: 50px" value="0" id="input_number_${item.id}" type='number' min="0" max='${item.scores[0].score}' placeholder="Score"/>`
+                    )
+                );
+                $tr_new = $('<tr>').append(
+                    $('<td>').text(""),
+                    $('<td>').html("<b style='color:#0ab089;'>Answer:</b>&nbsp&nbsp&nbsp" + answer_information.answer[`${item.id}`])
+                )
+                tr_new.push($tr_new[0]);
+                score_id_list.push(`input_number_${item.id}`);
+            } else {
+                $tr = $('<tr style="width: 100%">').append(
+                    $('<td>').html("<b style='color: #ed4956'>Q:</b>"),
+                    $('<td>').text(item.question),
+                    $('<td>').text(`Score: ${score}`)
+                );
+
+                $tr_new = $('<tr>').append(
+                    $('<td>').text(""),
+                    $('<td>').html("<b style='color:#0ab089;'>Answer:</b>&nbsp&nbsp&nbsp" + answer_information.answer[`${item.id}`])
+                )
+                tr_new.push($tr_new[0]);
+
+            }
+            tr.push($tr[0]);
+            if ($tr_new !== undefined) {
+                for (let i = 0; i < tr_new.length; i++) {
+                    tr.push(tr_new[i]);
+                }
+            }
+            tr.push("<tr><td></td><td><hr></td></tr>");
+
+        });
+        tr.push(
+            `<tr>
+                <td></td>
+                <td></td>
+                <td><button class="green_button" type='submit'>Apply</button></td>
+            </tr>`
+        );
+        $("#questions_table_body").html(tr);
     };
 
     // course table data iteration
@@ -551,6 +670,40 @@ $(document).ready(function () {
 
     }
 
+    // click on apply in answer question table
+    $(document).on("submit", "#question_sheet_submit", function (event) {
+        event.preventDefault();
+        $(this).apply_score_for_answers();
+
+        let data = {
+            answerId: answerId_glob,
+            score: total_score
+        };
+
+        $.ajax({
+            url: "/professor/apply-answer-score",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data)
+        }).done(function (response) {
+            $("#message_text").html("apply score was successful!!!")
+            display_on_off("#messages", "flex");
+            setTimeout($(this).successful_apply_score_toAnswer, 1500);
+        }).fail(function (errMsg) {
+            console.log(errMsg);
+        })
+    })
+
+    // configure total score insert in question sheet form
+    $.fn.apply_score_for_answers = function () {
+
+        for (let index = 0; index < score_id_list.length; index++) {
+            total_score += parseInt($(`#${score_id_list[index]}`).val());
+        }
+
+    }
+
     // click on delete in question sheet table
     $.fn.delete_question = function (questionId) {
         let data = {questionId: questionId};
@@ -723,8 +876,7 @@ $(document).ready(function () {
     // after click on submit in add professor image
     $("#add-professor-image").on('submit', function (event) {
         event.preventDefault();
-        var formData = new FormData(this);
-        console.log(formData);
+        let formData = new FormData(this);
 
         $.ajax({
             url: "/image/upload-profile-picture",
@@ -736,10 +888,9 @@ $(document).ready(function () {
             data: formData,
             cache: false
         }).done(function (response) {
-            console.log(response);
-            // $("#message_text").html("add question was successful!!!")
-            // display_on_off("#messages", "flex");
-            // setTimeout($(this).add_essays_back_function, 1500);
+            $("#message_text").html("upload image was successful!!!")
+            display_on_off("#messages", "flex");
+            setTimeout($(this).dashboard_back_function, 1500);
         }).fail(function (errMsg) {
             $("#message_text").html(errMsg.responseJSON.message)
             display_on_off("#messages", "flex");
@@ -750,8 +901,6 @@ $(document).ready(function () {
 
     // after load dashboard
     $(function () {
-
-        console.log("getImage");
 
         $.ajax({
             url: "/image/get-profile-picture",
@@ -823,10 +972,14 @@ $(document).ready(function () {
             $("#question_bank").css("display", "none");
         if (`"${divId}"` !== "#quiz_table")
             $("#quiz_table").css("display", "none");
+        if (`"${divId}"` !== "#participants_table")
+            $("#participants_table").css("display", "none");
         if (`"${divId}"` !== "#question_sheet_table")
             $("#question_sheet_table").css("display", "none");
         if (`"${divId}"` !== "#previousAndNextButton")
             $("#previousAndNextButton").css("display", "none");
+        if (`"${divId}"` !== "#participants_table")
+            $("#participants_table").css("display", "none");
 
         $(`${divId}`).css("display", `${displayType}`);
         $('#course_table_quiz_info').html("");

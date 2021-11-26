@@ -17,4 +17,12 @@ public class ExceptionController {
                 HttpStatus.NOT_FOUND
         );
     }
+
+    @ExceptionHandler(value = OutOfTimeException.class)
+    public ResponseEntity<String> handle(OutOfTimeException exception) {
+        return new ResponseEntity<>(
+                exception.getMessage(),
+                HttpStatus.REQUEST_TIMEOUT
+        );
+    }
 }

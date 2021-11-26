@@ -49,11 +49,18 @@ public class UserProfilePictureServiceImpl implements UserProfilePictureService 
 
     @Override
     public UserProfilePicture store(MultipartFile image) throws IOException {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<User> user = userService.findUserByUsername(authentication.getName());
         String name = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+
         UserProfilePicture profilePicture =
-                new UserProfilePicture(name, image.getContentType(), image.getBytes(), user.orElseThrow());
+                findByUser_Username(authentication.getName()).orElse(new UserProfilePicture());
+
+        profilePicture.setName(name);
+        profilePicture.setType(image.getContentType());
+        profilePicture.setData(image.getBytes());
+        profilePicture.setUser(user.orElseThrow());
 
         return repository.save(profilePicture);
     }
