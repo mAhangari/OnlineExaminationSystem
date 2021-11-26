@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,10 +16,16 @@ public class AnswerDTO {
 
     private Long id;
 
+    private Map<String, String> answer;
+
     private double score;
 
     private LocalDateTime startAnswerDateTime;
 
     private LocalDateTime endAnswerDateTime;
+
+    private StudentDTO student;
+
+    private QuestionSheetDTO questionSheet;
 
 }
