@@ -404,22 +404,30 @@ button:hover {
 
 /* add 30px margin top on element */
 .margin-top-30px {
-    margin-top: 30px;
+	margin-top: 30px;
 }
 
-#course_table, #course_table_quiz_information, #quiz_information_table {
-    padding-top: 30px;
-    height: 300px;
-    width: 500px;
-    overflow-y: auto;
+#course_table, #course_table_quiz_information {
+	padding-top: 30px;
+	height: 300px;
+	width: 500px;
+	overflow-y: auto;
+}
+
+/* quiz information table size */
+#quiz_information_table {
+	padding-top: 30px;
+	height: 300px;
+	width: 650px;
+	overflow-y: auto;
 }
 
 /* question bank table handle overflow */
 #question_bank {
-    padding-top: 30px;
-    height: 220px;
-    width: 590px;
-    overflow-y: auto;
+	padding-top: 30px;
+	height: 220px;
+	width: 590px;
+	overflow-y: auto;
 }
 
 /* questions table handle overflow */
@@ -488,22 +496,32 @@ button:hover {
 
 /* quiz button for question sheet design button */
 #question_sheet_button {
-    background-color: #9099b7;
-    height: 20px;
-    width: 100px;
-    border: none;
-    color: white;
-    border-radius: 5px;
+	background-color: #9099b7;
+	height: 20px;
+	width: 100px;
+	border: none;
+	color: white;
+	border-radius: 5px;
+}
+
+/* quiz button for participants information */
+#examiners_information {
+	background-color: #9099b7;
+	height: 20px;
+	width: 75px;
+	border: none;
+	color: white;
+	border-radius: 5px;
 }
 
 /* quiz design delete button */
 #delete_info_button {
-    background-color: #E64C65;
-    height: 20px;
-    width: 50px;
-    border: none;
-    color: white;
-    border-radius: 10px;
+	background-color: #E64C65;
+	height: 20px;
+	width: 50px;
+	border: none;
+	color: white;
+	border-radius: 10px;
 }
 
 /* decorate input of create quiz section */

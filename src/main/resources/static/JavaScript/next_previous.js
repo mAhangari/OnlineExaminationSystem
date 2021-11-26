@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     let circle_id = 0;
     // click on next button
-    $.fn.next_func = function () {
+    $.fn.next_func = function (section) {
         let res_length = $response_glob.length;
         if ($end < res_length) {
             $start = $start + $rowPerPage;
@@ -75,11 +75,11 @@ $(document).ready(function () {
             }
 
         }
-        $(this).page_data_change();
+        $(this).page_data_change(section);
     };
 
     // click on previous button
-    $.fn.previous_func = function () {
+    $.fn.previous_func = function (section) {
         let res_length = $response_glob.length;
         if ($start >= $rowPerPage) {
             $start = $start - $rowPerPage;
@@ -146,16 +146,16 @@ $(document).ready(function () {
             }
 
         }
-        $(this).page_data_change();
+        $(this).page_data_change(section);
     };
 
     // function for next and previous button
-    $.fn.next_previous_button = function () {
+    $.fn.next_previous_button = function (section) {
         let res_length = $response_glob.length;
         if ($end < res_length) {
             $("#previousAndNextButton").css("display", "flex");
             let tr = [];
-            tr.push($(`<button id="previous" class="previousAndNextButton" type="button" onclick="$(this).previous_func()">PREVIOUS</button>`)[0]);
+            tr.push($(`<button id="previous" class="previousAndNextButton" type="button" onclick="$(this).previous_func(${section})">PREVIOUS</button>`)[0]);
             let i = 0;
 
             if ((res_length / $rowPerPage) <= 2) {
@@ -174,7 +174,7 @@ $(document).ready(function () {
                 tr.push($(`<span id="circle_id_${i++}" class='little_circle display_none'>`)[0]);
             }
 
-            tr.push($(`<button id="next" class="previousAndNextButton" type="button" onclick='$(this).next_func()'>NEXT</button>`)[0]);
+            tr.push($(`<button id="next" class="previousAndNextButton" type="button" onclick='$(this).next_func(${section})'>NEXT</button>`)[0]);
             $("#previousAndNextButton").html(tr);
             $("#circle_id_0").css("backgroundColor", "gray");
         }
