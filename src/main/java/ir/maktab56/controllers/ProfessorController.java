@@ -1,14 +1,13 @@
 package ir.maktab56.controllers;
 
 import ir.maktab56.mapper.*;
+import ir.maktab56.model.Answer;
 import ir.maktab56.service.EssaysService;
 import ir.maktab56.service.*;
-import ir.maktab56.service.dto.CourseDTO;
-import ir.maktab56.service.dto.QuestionDTO;
-import ir.maktab56.service.dto.QuestionSheetDTO;
-import ir.maktab56.service.dto.QuizDTO;
+import ir.maktab56.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +30,18 @@ public class ProfessorController {
     private final EssaysService essaysService;
     private final MultipleChoiceService multipleChoiceService;
     private final QuestionService questionService;
+    private AnswerService answerService;
+    private AnswerMapper answerMapper;
 
+    @Autowired
+    public void setAnswerService(AnswerService answerService) {
+        this.answerService = answerService;
+    }
+
+    @Autowired
+    public void setAnswerMapper(AnswerMapper answerMapper) {
+        this.answerMapper = answerMapper;
+    }
 
     // create mapping for professor profile page
     @GetMapping(value = "/professor-profile")
@@ -179,16 +189,40 @@ public class ProfessorController {
         return ResponseEntity.ok(obj.toMap());
     }
 
-    // delete question base on question id
-    @DeleteMapping(value = "/delete-question/{questionId}/{quizId_glob}")
-    public ResponseEntity<Map<String, Object>> deleteQuestion(@PathVariable Long questionId,
-                                                              @PathVariable Long quizId_glob) {
+    // apply answer score
+    @PostMapping(value = "/apply-answer-score")
+    public ResponseEntity<Map<String, Object>> applyAnswerScore(@RequestBody Map<String, Object> answer) {
 
-        questionService.remove(questionId, quizId_glob);
+        Answer updateAnswer = answerService.findById(Long.parseLong(answer.get("answerId").toString())).orElseThrow();
+        updateAnswer.setScore(Double.parseDouble(answer.get("score").toString()));
+        answerService.save(updateAnswer);
 
         JSONObject obj = new JSONObject();
         obj.put("status", "success");
         return ResponseEntity.ok(obj.toMap());
+    }
+
+    // delete question base on question id
+    @DeleteMapping(value = "/delete-question/{questionId}/{quizId}")
+    public ResponseEntity<Map<String, Object>> deleteQuestion(@PathVariable Long questionId,
+                                                              @PathVariable Long quizId) {
+
+        questionService.remove(questionId, quizId);
+
+        JSONObject obj = new JSONObject();
+        obj.put("status", "success");
+        return ResponseEntity.ok(obj.toMap());
+    }
+
+    // get participants information base on quiz id
+    @GetMapping(value = "/get-participants/{quizId}")
+    public ResponseEntity<List<AnswerDTO>> getParticipants(@PathVariable Long quizId) {
+
+        JSONObject obj = new JSONObject();
+        obj.put("status", "success");
+        return ResponseEntity.ok(
+                answerMapper.convertListEntityToDTO(answerService.findParticipatingAnswers(quizId))
+        );
     }
 
 }
